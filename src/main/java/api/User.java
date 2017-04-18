@@ -11,7 +11,11 @@ public class User {
     @Path("/login")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String login(@QueryParam("userName") String userName, @QueryParam("password") String password) {
+    public String login(
+            @HeaderParam(value = "Authorization") String authorization,
+            @QueryParam("userName") String userName,
+            @QueryParam("password") String password
+    ) {
         return "Got it!";
     }
 
@@ -21,6 +25,7 @@ public class User {
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
     public String create(
+            @HeaderParam(value = "Authorization") String authorization,
             @FormParam("name") String name,
             @FormParam("dateOfBirth") String dateOfBirth,
             @FormParam("userName") String userName,
@@ -35,7 +40,9 @@ public class User {
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/message/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMessages() {
+    public String getMessages(
+            @HeaderParam(value = "Authorization") String authorization
+    ) {
         return "Got it!";
     }
 

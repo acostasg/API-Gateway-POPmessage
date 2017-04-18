@@ -2,7 +2,11 @@ package api;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Form;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 import org.glassfish.grizzly.http.server.HttpServer;
 
@@ -19,7 +23,7 @@ public class UserTest {
     @Before
     public void setUp() throws Exception {
         // start the server
-        server = Main.startServer();
+        this.server = Main.startServer();
         // create the client
         Client c = ClientBuilder.newClient();
 
@@ -29,7 +33,7 @@ public class UserTest {
         // --
         // c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
 
-        target = c.target(Main.BASE_URI);
+        this.target = c.target(Main.BASE_URI);
     }
 
     @After
@@ -40,7 +44,39 @@ public class UserTest {
 
     @Test
     public void test_login() {
-        String responseMsg = target.path("user/login").queryParam("userName","name").queryParam("password","1234").request().get(String.class);
+        String responseMsg = this.target.path("user/login")
+                .queryParam("userName","name")
+                .queryParam("password","1234")
+                .request()
+                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .get(String.class);
+        assertEquals("Got it!", responseMsg);
+    }
+
+    @Test
+    public void test_create() {
+        Form input = new Form();
+        input.param("name", "testName");
+        input.param("dateOfBirth", "2014-02-13 02:42:48");
+        input.param("userName", "testUserNanme");
+        input.param("password", "testPassword");
+        input.param("privacyPolicy", "testPrivacyPolicy");
+        Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
+
+        Response response = this.target.path("user/create")
+                .request()
+                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .post(entity);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void test_message_get() {
+
+        String responseMsg = this.target.path("user/message/get")
+                .request()
+                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .get(String.class);
         assertEquals("Got it!", responseMsg);
     }
 }
