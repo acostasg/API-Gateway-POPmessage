@@ -11,7 +11,11 @@ public class Message {
     @Path("/get")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@QueryParam("lat") String lat, @QueryParam("lon") String lon) {
+    public String get(
+            @HeaderParam(value = "Authorization") String authorization,
+            @QueryParam("lat") String lat,
+            @QueryParam("lon") String lon
+    ) {
         return "Got it!";
     }
 
@@ -20,7 +24,12 @@ public class Message {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@FormParam("text") String text, @FormParam("lat") String lat, @FormParam("lon") String lon) {
+    public String create(
+            @HeaderParam(value = "Authorization") String authorization,
+            @FormParam("text") String text,
+            @FormParam("lat") String lat,
+            @FormParam("lon") String lon
+    ) {
         return "Got it!";
     }
 
@@ -29,7 +38,10 @@ public class Message {
     @Path("/delete")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(@FormParam("message") String message) {
+    public String delete(
+            @HeaderParam(value = "Authorization") String authorization,
+            @FormParam("message") String message
+    ) {
         return "Got it!";
     }
 
