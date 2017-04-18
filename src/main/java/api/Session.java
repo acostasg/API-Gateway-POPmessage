@@ -16,4 +16,3 @@ public class Session {
         return "Success!";
     }
 }
-vim .git    bi
