@@ -32,6 +32,6 @@ public abstract class AbstractTest {
 
     @After
     public void tearDown() throws Exception {
-        server.stop();
+        server.shutdownNow();
     }
 }
