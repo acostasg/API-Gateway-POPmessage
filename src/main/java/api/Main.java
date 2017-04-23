@@ -13,7 +13,7 @@ import java.net.URI;
  */
 public class Main {
 
-    public static final String BASE_URI = "http://127.0.0.1:8080/POPmessage";
+    public static final String BASE_URI = "http://0.0.0.0:8080/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
@@ -30,11 +30,9 @@ public class Main {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        final HttpServer server = startServer();
+        startServer();
         System.out.println(String.format("Jersey app started with WADL available at "
-                + "%sapplication.wadl\nHit enter to stop it...", BASE_URI));
-        System.in.read();
-        server.shutdownNow();
+                + "%sapplication.wadl", BASE_URI));
     }
 }
 
