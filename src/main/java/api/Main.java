@@ -12,7 +12,7 @@ import java.net.URI;
  *
  */
 public class Main {
-    // Base URI the Grizzly HTTP server will listen on
+
     public static final String BASE_URI = "http://127.0.0.1:8080/POPmessage";
 
     /**
@@ -20,12 +20,7 @@ public class Main {
      * @return Grizzly HTTP server.
      */
     public static HttpServer startServer() {
-        // create a resource config that scans for JAX-RS resources and providers
-        // in api package
         final ResourceConfig rc = new ResourceConfig().packages("api");
-
-        // create and start a new instance of grizzly http server
-        // exposing the Jersey application at BASE_URI
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
