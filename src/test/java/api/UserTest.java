@@ -18,7 +18,7 @@ public class UserTest extends AbstractTest {
                 .request()
                 .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
                 .get(String.class);
-        assertEquals("Got it!", responseMsg);
+        assertEquals("{\"Token\":{\"hash\":\"dummyToken\"}}", responseMsg);
     }
 
     @Test
@@ -28,7 +28,7 @@ public class UserTest extends AbstractTest {
         input.param("dateOfBirth", "2014-02-13 02:42:48");
         input.param("userName", "testUserNanme");
         input.param("password", "testPassword");
-        input.param("privacyPolicy", "testPrivacyPolicy");
+        input.param("privacyPolicy", "true");
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("user/create")

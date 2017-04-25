@@ -1,5 +1,8 @@
 package api;
 
+import api.domain.exceptions.InvalidAppKey;
+import api.domain.service.ValidationAppService;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -12,7 +15,10 @@ public class Session {
     @Produces(MediaType.APPLICATION_JSON)
     public String login(
             @HeaderParam(value = "Authorization") String authorization
-    ) {
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
         return "Success!";
     }
 }

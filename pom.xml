@@ -62,7 +62,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>api.Main</mainClass>
+                    <mainClass>api.domain.entity.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>

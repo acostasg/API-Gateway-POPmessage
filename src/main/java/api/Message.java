@@ -1,5 +1,8 @@
 package api;
 
+import api.domain.exceptions.InvalidAppKey;
+import api.domain.service.ValidationAppService;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -15,7 +18,10 @@ public class Message {
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("lat") String lat,
             @QueryParam("lon") String lon
-    ) {
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
         return "Got it!";
     }
 
@@ -29,7 +35,10 @@ public class Message {
             @FormParam("text") String text,
             @FormParam("lat") String lat,
             @FormParam("lon") String lon
-    ) {
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
         return "Got it!";
     }
 
@@ -41,7 +50,10 @@ public class Message {
     public String delete(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String message
-    ) {
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
         return "Got it!";
     }
 

@@ -24,5 +24,5 @@ Class-Path: jersey-guava-2.25.1.jar
             jersey-media-jaxb-2.25.1.jar
             hk2-utils-2.5.0-b32.jar
             org.eclipse.persistence.moxy-2.6.0.jar
-Main-Class: api.Main
+Main-Class: api.domain.entity.Main
 

@@ -1,5 +1,15 @@
 package api;
 
+import api.domain.command.CommandLogin;
+import api.domain.command.CommandRegisterUser;
+import api.domain.command.request.LoginUserRequest;
+import api.domain.command.request.RegisterUserRequest;
+import api.domain.entity.Token;
+import api.domain.exceptions.InvalidAppKey;
+import api.domain.service.ValidationAppService;
+import api.infrastucture.inMemory.TokenRepository;
+import api.infrastucture.inMemory.UserRepository;
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
@@ -15,8 +25,23 @@ public class User {
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("userName") String userName,
             @QueryParam("password") String password
-    ) {
-        return "Got it!";
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
+        CommandLogin userCase = new CommandLogin(
+                new UserRepository(),
+                new TokenRepository()
+        );
+
+        Token token = userCase.execute(
+                new LoginUserRequest(
+                        userName,
+                        password
+                )
+        );
+
+        return token.toString();
     }
 
 
@@ -31,8 +56,25 @@ public class User {
             @FormParam("userName") String userName,
             @FormParam("password") String password,
             @FormParam("privacyPolicy") Boolean privacyPolicy
-    ) {
-        return "Got it!";
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
+        CommandRegisterUser userCase = new CommandRegisterUser(
+                new UserRepository()
+        );
+
+        api.domain.entity.User user = userCase.execute(
+                new RegisterUserRequest(
+                        name,
+                        dateOfBirth,
+                        userName,
+                        password,
+                        privacyPolicy
+                )
+        );
+
+        return user.toString();
     }
 
 
@@ -42,7 +84,10 @@ public class User {
     @Produces(MediaType.APPLICATION_JSON)
     public String getMessages(
             @HeaderParam(value = "Authorization") String authorization
-    ) {
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
         return "Got it!";
     }
 
