@@ -1,10 +1,15 @@
 package api;
 
+import api.domain.command.CommandGetMessagesByLocation;
+import api.domain.command.request.GetMessagesByLocationRequest;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.service.ValidationAppService;
+import api.infrastucture.inMemory.MessageRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.ArrayList;
+import java.util.List;
 
 @Path("message")
 public class Message {
@@ -22,7 +27,18 @@ public class Message {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        return "Got it!";
+        CommandGetMessagesByLocation useCase = new CommandGetMessagesByLocation(
+                new MessageRepository()
+        );
+
+        List<api.domain.entity.Message> messages = useCase.execute(
+                new GetMessagesByLocationRequest(
+                        lat,
+                        lon
+                )
+        );
+
+        return messages.toString();
     }
 
 

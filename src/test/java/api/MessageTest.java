@@ -1,5 +1,8 @@
 package api;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.junit.Test;
 
 import javax.ws.rs.client.Entity;
@@ -12,14 +15,20 @@ import static org.junit.Assert.assertEquals;
 public class MessageTest extends AbstractTest {
 
     @Test
-    public void test_get() {
+    public void test_get() throws ParseException {
         String responseMsg = this.target.path("message/get")
                 .queryParam("lat","12.123123")
                 .queryParam("lon","34.234234")
                 .request()
                 .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
                 .get(String.class);
-        assertEquals("Got it!", responseMsg);
+
+        JSONParser parser = new JSONParser();
+
+        Object obj = parser.parse(responseMsg);
+        JSONArray jsonArray = (JSONArray) obj;
+
+        assertEquals(10,  jsonArray.size());
     }
 
     @Test
