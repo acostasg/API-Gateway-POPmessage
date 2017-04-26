@@ -1,8 +1,8 @@
 package api.domain.command;
 
-import api.domain.infrastructure.UserRepository;
 import api.domain.command.request.RegisterUserRequest;
 import api.domain.entity.User;
+import api.domain.infrastructure.UserRepository;
 
 public class CommandRegisterUser implements Command<User,RegisterUserRequest> {
 

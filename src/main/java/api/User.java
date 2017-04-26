@@ -1,19 +1,21 @@
 package api;
 
-import api.domain.command.CommandLogin;
-import api.domain.command.CommandRegisterUser;
-import api.domain.command.CommandValidateToken;
+import api.domain.command.*;
+import api.domain.command.request.GetMessagesByUserRequest;
+import api.domain.command.request.GetUserByTokenRequest;
 import api.domain.command.request.LoginUserRequest;
 import api.domain.command.request.RegisterUserRequest;
-import api.domain.command.request.ValidateTokenRequest;
+import api.domain.entity.Message;
 import api.domain.entity.Token;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.service.ValidationAppService;
+import api.infrastucture.inMemory.MessageRepository;
 import api.infrastucture.inMemory.TokenRepository;
 import api.infrastucture.inMemory.UserRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import java.util.List;
 
 @Path("user")
 public class User {
@@ -91,7 +93,38 @@ public class User {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        return "Got it!";
+        api.domain.entity.User user = getUserByToken(token);
+
+        List<api.domain.entity.Message> messageList = getMessagesByUser(user);
+
+        return messageList.toString();
+    }
+
+    private List<Message> getMessagesByUser(api.domain.entity.User user) {
+        CommandGetMessagesByUser userCaseGetMessagesByUser = new CommandGetMessagesByUser(
+                new MessageRepository()
+        );
+
+        return userCaseGetMessagesByUser.execute(
+                new GetMessagesByUserRequest(
+                        user
+                )
+        );
+    }
+
+    private api.domain.entity.User getUserByToken(@QueryParam("token") String token) {
+        CommandGetUserByToken userCaseGetUserByToken = new CommandGetUserByToken(
+                new UserRepository(),
+                new CommandValidateToken(
+                        new TokenRepository()
+                )
+        );
+
+        return userCaseGetUserByToken.execute(
+                new GetUserByTokenRequest(
+                        token
+                )
+        );
     }
 
 }

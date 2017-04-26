@@ -18,4 +18,11 @@ public class Location {
         return this.lon;
     }
 
+    @Override
+    public String toString() {
+        return "{ \"Location\":{" +
+                "\"lat\":\"" + lat + '\"' +
+                ", \"lon\":\"" + lon + '\"' +
+                "}}";
+    }
 }

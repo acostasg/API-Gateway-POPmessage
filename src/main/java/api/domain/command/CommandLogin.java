@@ -1,10 +1,10 @@
 package api.domain.command;
 
-import api.domain.infrastructure.TokenRepository;
-import api.domain.infrastructure.UserRepository;
 import api.domain.command.request.LoginUserRequest;
 import api.domain.entity.Token;
 import api.domain.entity.User;
+import api.domain.infrastructure.TokenRepository;
+import api.domain.infrastructure.UserRepository;
 
 public class CommandLogin implements Command<Token,LoginUserRequest> {
 

@@ -1,11 +1,19 @@
 package api;
 
+import org.json.simple.JSONArray;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+import org.junit.Test;
+
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonReader;
+import javax.json.stream.JsonParser;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 public class UserTest extends AbstractTest {
@@ -39,12 +47,19 @@ public class UserTest extends AbstractTest {
     }
 
     @Test
-    public void test_message_get() {
+    public void test_message_get() throws ParseException {
 
         String responseMsg = this.target.path("user/message/get")
+                .queryParam("token","sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj")
                 .request()
                 .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
                 .get(String.class);
-        assertEquals("Got it!", responseMsg);
+
+        JSONParser parser = new JSONParser();
+
+        Object obj = parser.parse(responseMsg);
+        JSONArray jsonArray = (JSONArray) obj;
+
+        assertEquals(10,  jsonArray.size());
     }
 }

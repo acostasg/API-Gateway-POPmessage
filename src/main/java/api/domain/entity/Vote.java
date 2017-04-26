@@ -6,16 +6,30 @@ public class Vote {
     private Id userID;
     private Type type;
 
-    public Id getMessageID() {
+    public Vote(Id messageID, Id userID, Type type){
+        this.messageID = messageID;
+        this.userID = userID;
+        this.type = type;
+    }
+
+    public Id MessageID() {
         return messageID;
     }
 
-    public Id getUserID() {
+    public Id UserID() {
         return userID;
     }
 
-    public Type getType() {
+    public Type Type() {
         return type;
     }
 
+    @Override
+    public String toString() {
+        return "{\"Vote\":{" +
+                messageID +
+                "," + userID +
+                ", \"type\":\"" + type + "\"" +
+                "}}";
+    }
 }

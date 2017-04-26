@@ -11,7 +11,14 @@ public class Message {
     private List<Vote> votes;
     private Status status;
 
-    public Message(Id ID, Id userID, String text, Location location, List<Vote> votes, Status status) {
+    public Message(
+            Id ID,
+            Id userID,
+            String text,
+            Location location,
+            List<Vote> votes,
+            Status status
+    ) {
         this.ID = ID;
         this.userID = userID;
         this.text = text;
@@ -44,4 +51,15 @@ public class Message {
         return status;
     }
 
+    @Override
+    public String toString() {
+        return "{ \"Message\":{" +
+                ID +
+                "," + userID +
+                ", \"text\":\"" + text + '\"' +
+                ", \"location\":" + location +
+                ", \"votes\":" + votes +
+                ", \"status\":\"" + status + "\""+
+                "}}";
+    }
 }
