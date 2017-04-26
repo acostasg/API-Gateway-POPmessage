@@ -18,6 +18,10 @@ public class Token {
         return this.hash.isEmpty();
     }
 
+    public boolean isHashEqual(String $hash){
+        return this.hash.equals($hash);
+    }
+
     @Override
     public String toString() {
         return "{\"Token\":{" +

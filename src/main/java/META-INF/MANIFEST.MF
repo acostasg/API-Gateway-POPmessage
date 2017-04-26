@@ -1,28 +1,14 @@
 Manifest-Version: 1.0
-Class-Path: jersey-guava-2.25.1.jar
-            jersey-media-moxy-2.25.1.jar
-            grizzly-framework-2.3.28.jar
-            jersey-common-2.25.1.jar
-            jersey-container-grizzly2-http-2.25.1.jar
-            aopalliance-repackaged-2.5.0-b32.jar
-            osgi-resource-locator-1.0.1.jar
-            javax.annotation-api-1.2.jar
-            grizzly-http-server-2.3.28.jar
-            validation-api-1.1.0.Final.jar
-            javax.inject-2.5.0-b32.jar
-            grizzly-http-2.3.28.jar
-            org.eclipse.persistence.core-2.6.0.jar
-            org.eclipse.persistence.asm-2.6.0.jar
-            javax.ws.rs-api-2.0.1.jar
-            hk2-locator-2.5.0-b32.jar
-            javassist-3.20.0-GA.jar
-            hk2-api-2.5.0-b32.jar
-            jersey-server-2.25.1.jar
-            jersey-entity-filtering-2.25.1.jar
-            javax.json-1.0.4.jar
-            jersey-client-2.25.1.jar
-            jersey-media-jaxb-2.25.1.jar
-            hk2-utils-2.5.0-b32.jar
-            org.eclipse.persistence.moxy-2.6.0.jar
-Main-Class: api.domain.entity.Main
+Class-Path: jersey-guava-2.25.1.jar jersey-media-moxy-2.25.1.jar grizz
+ ly-framework-2.3.28.jar jersey-common-2.25.1.jar jersey-container-gri
+ zzly2-http-2.25.1.jar aopalliance-repackaged-2.5.0-b32.jar osgi-resou
+ rce-locator-1.0.1.jar javax.annotation-api-1.2.jar grizzly-http-serve
+ r-2.3.28.jar validation-api-1.1.0.Final.jar javax.inject-2.5.0-b32.ja
+ r grizzly-http-2.3.28.jar org.eclipse.persistence.core-2.6.0.jar org.
+ eclipse.persistence.asm-2.6.0.jar javax.ws.rs-api-2.0.1.jar hk2-locat
+ or-2.5.0-b32.jar javassist-3.20.0-GA.jar hk2-api-2.5.0-b32.jar jersey
+ -server-2.25.1.jar jersey-entity-filtering-2.25.1.jar javax.json-1.0.
+ 4.jar jersey-client-2.25.1.jar jersey-media-jaxb-2.25.1.jar hk2-utils
+ -2.5.0-b32.jar org.eclipse.persistence.moxy-2.6.0.jar
+Main-Class: api.Main
 

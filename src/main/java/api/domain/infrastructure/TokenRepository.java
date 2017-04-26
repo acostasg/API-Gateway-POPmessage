@@ -7,6 +7,6 @@ public interface TokenRepository {
 
     Token generateToken(User user);
 
-    boolean validateToken(Token token);
+    Token validateToken(Token token);
 
 }
