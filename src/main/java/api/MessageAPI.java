@@ -1,11 +1,11 @@
 package api;
 
 import api.domain.command.*;
-import api.domain.command.request.CreateMessagesRequest;
-import api.domain.command.request.DeleteMessagesRequest;
-import api.domain.command.request.GetMessagesByLocationRequest;
-import api.domain.command.request.GetUserByTokenRequest;
-import api.domain.entity.*;
+import api.domain.command.request.*;
+import api.domain.entity.Id;
+import api.domain.entity.Message;
+import api.domain.entity.Type;
+import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.service.ValidationAppService;
 import api.infrastucture.inMemory.MessageRepository;
@@ -14,7 +14,6 @@ import api.infrastucture.inMemory.UserRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
-import java.util.ArrayList;
 import java.util.List;
 
 @Path("message")
@@ -107,9 +106,9 @@ public class MessageAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        User user = getUserByToken(token);
+        Message message = this.getAddVoteToMessage(messageId, token, Type.POSITIVE);
 
-        return "Got it!";
+        return message.toString();
     }
 
     @POST
@@ -124,9 +123,25 @@ public class MessageAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
+        Message message = this.getAddVoteToMessage(messageId, token, Type.NEGATIVE);
+
+        return message.toString();
+    }
+
+    private Message getAddVoteToMessage(@FormParam("message") String messageId, @QueryParam("token") String token, Type type) {
         User user = getUserByToken(token);
 
-        return "Got it!";
+        CommandVoteMessage useCase = new CommandVoteMessage(
+                new MessageRepository()
+        );
+
+        return useCase.execute(
+                new VoteMessagesRequest(
+                        user,
+                        new Id(messageId),
+                        type
+                )
+        );
     }
 
 
