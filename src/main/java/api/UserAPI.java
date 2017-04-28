@@ -7,6 +7,7 @@ import api.domain.command.request.LoginUserRequest;
 import api.domain.command.request.RegisterUserRequest;
 import api.domain.entity.Message;
 import api.domain.entity.Token;
+import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.service.ValidationAppService;
 import api.infrastucture.inMemory.MessageRepository;
@@ -18,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("user")
-public class User {
+public class UserAPI {
 
 
     @GET
@@ -68,7 +69,7 @@ public class User {
                 new UserRepository()
         );
 
-        api.domain.entity.User user = userCase.execute(
+        User user = userCase.execute(
                 new RegisterUserRequest(
                         name,
                         dateOfBirth,
@@ -93,7 +94,7 @@ public class User {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        api.domain.entity.User user = getUserByToken(token);
+        User user = getUserByToken(token);
 
         List<api.domain.entity.Message> messageList = getMessagesByUser(user);
 

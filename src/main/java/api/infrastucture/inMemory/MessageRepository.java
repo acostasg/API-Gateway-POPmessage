@@ -2,11 +2,20 @@ package api.infrastucture.inMemory;
 
 import api.domain.entity.*;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class MessageRepository implements api.domain.infrastructure.MessageRepository {
+
+    static final private String DUMMY_ID = "DummyId";
+
+    private final Random rnd;
+
+    public MessageRepository() {
+        rnd = new Random();
+    }
 
     @Override
     public List<Message> getMessagesByUser(User user) {
@@ -36,23 +45,73 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
         return messages;
     }
 
-    private Message getMessageDummy() {
+    @Override
+    public Message getMessage(Id messageId) {
+        return this.getMessageDummy(messageId.Id());
+    }
 
-        Random rnd = new Random();
-        Integer id = rnd.nextInt();
-        List<Vote> votes = getVotes(id);
+    @Override
+    public Message crateMessage(String text, User user, Location location) {
+        return this.getMessageDummy(DUMMY_ID, user.ID().Id(), text, location);
+    }
 
+    @Override
+    public Message deleteMessage(User user, Message message) {
         return new Message(
-                new Id(id.toString()),
-                new Id(UserRepository.ID_DUMMY),
-                "Text for missage for testing proporse",
-                new Location("41.385064", "2.173403"),
+                message.ID(),
+                user.ID(),
+                message.Text(),
+                message.Location(),
+                message.Votes(),
+                Status.DELETED
+        );
+    }
+
+    @Override
+    public Message addVoteToMessage(User user, Message message, Type type) {
+        ArrayList<Vote> votes = new ArrayList<Vote>();
+        votes.add(new Vote(
+                message.ID(),
+                user.ID(),
+                type
+        ));
+        return new Message(
+                message.ID(),
+                user.ID(),
+                message.Text(),
+                message.Location(),
                 votes,
+                Status.DELETED
+        );
+    }
+
+    private Message getMessageDummy() {
+        Integer id = rnd.nextInt();
+        return this.getMessageDummy(id.toString());
+    }
+
+    private Message getMessageDummy(String id) {
+        return this.getMessageDummy(
+                id,
+                UserRepository.ID_DUMMY,
+                "Text for missage for testing proporse",
+                new Location("41.385064", "2.173403")
+        );
+    }
+
+    private Message getMessageDummy(String id, String userId, String text, Location location) {
+        return new Message(
+                new Id(id),
+                new Id(userId),
+                text,
+                location,
+                getVotes(),
                 Status.ACTIVE
         );
     }
 
-    private List<Vote> getVotes(Integer id) {
+    private List<Vote> getVotes() {
+        Integer id = rnd.nextInt();
         List<Vote> votes = new ArrayList<Vote>();
 
         votes.add(

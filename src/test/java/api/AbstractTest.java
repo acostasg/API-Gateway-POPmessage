@@ -11,8 +11,14 @@ import javax.ws.rs.client.WebTarget;
 
 public abstract class AbstractTest {
 
+    protected static final String APP_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+
+    protected static final String TOKEN = "sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj";
+
     protected HttpServer server;
     protected WebTarget target;
+
+
 
     @Before
     public void setUp() throws Exception {

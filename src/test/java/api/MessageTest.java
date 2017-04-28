@@ -17,10 +17,10 @@ public class MessageTest extends AbstractTest {
     @Test
     public void test_get() throws ParseException {
         String responseMsg = this.target.path("message/get")
-                .queryParam("lat","12.123123")
-                .queryParam("lon","34.234234")
+                .queryParam("lat", "12.123123")
+                .queryParam("lon", "34.234234")
                 .request()
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .header("Authorization", APP_KEY)
                 .get(String.class);
 
         JSONParser parser = new JSONParser();
@@ -28,7 +28,7 @@ public class MessageTest extends AbstractTest {
         Object obj = parser.parse(responseMsg);
         JSONArray jsonArray = (JSONArray) obj;
 
-        assertEquals(10,  jsonArray.size());
+        assertEquals(10, jsonArray.size());
     }
 
     @Test
@@ -39,9 +39,37 @@ public class MessageTest extends AbstractTest {
         input.param("lon", "14.234234");
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
-        Response response = this.target.path("message/create")
+        Response response = this.target.path("message/create").queryParam("token", TOKEN)
                 .request()
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .header("Authorization", APP_KEY)
+                .post(entity);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void test_message_vote_like() {
+        Form input = new Form();
+        input.param("message", "DummyId");
+        Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
+
+        Response response = this.target.path("message/vote/like/create")
+                .queryParam("token", TOKEN)
+                .request()
+                .header("Authorization", APP_KEY)
+                .post(entity);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
+    public void test_message_vote_dislike() {
+        Form input = new Form();
+        input.param("message", "DummyId");
+        Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
+
+        Response response = this.target.path("message/vote/dislike/create")
+                .queryParam("token", TOKEN)
+                .request()
+                .header("Authorization", APP_KEY)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -49,12 +77,13 @@ public class MessageTest extends AbstractTest {
     @Test
     public void test_delete() {
         Form input = new Form();
-        input.param("message", "testMessage");
+        input.param("message", "DummyId");
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/delete")
+                .queryParam("token", TOKEN)
                 .request()
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .header("Authorization", APP_KEY)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }

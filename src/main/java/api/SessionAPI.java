@@ -11,7 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("session")
-public class Session {
+public class SessionAPI {
 
     @GET
     @Path("/token")
