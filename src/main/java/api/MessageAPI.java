@@ -128,7 +128,11 @@ public class MessageAPI {
         return message.toString();
     }
 
-    private Message getAddVoteToMessage(@FormParam("message") String messageId, @QueryParam("token") String token, Type type) {
+    private Message getAddVoteToMessage(
+            @FormParam("message") String messageId,
+            @QueryParam("token") String token,
+            Type type
+    ) {
         User user = getUserByToken(token);
 
         CommandVoteMessage useCase = new CommandVoteMessage(

@@ -24,7 +24,7 @@ public class UserTest extends AbstractTest {
                 .queryParam("userName","name")
                 .queryParam("password","1234")
                 .request()
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .header("Authorization",APP_KEY)
                 .get(String.class);
         assertEquals("{\"Token\":{\"hash\":\"sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj\"}}", responseMsg);
     }
@@ -41,7 +41,7 @@ public class UserTest extends AbstractTest {
 
         Response response = this.target.path("user/create")
                 .request()
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .header("Authorization",APP_KEY)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -50,9 +50,9 @@ public class UserTest extends AbstractTest {
     public void test_message_get() throws ParseException {
 
         String responseMsg = this.target.path("user/message/get")
-                .queryParam("token","sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj")
+                .queryParam("token",TOKEN)
                 .request()
-                .header("Authorization","eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9")
+                .header("Authorization",APP_KEY)
                 .get(String.class);
 
         JSONParser parser = new JSONParser();

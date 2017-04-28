@@ -19,6 +19,10 @@ public class CommandDeleteMessage implements Command<Message, DeleteMessagesRequ
 
         Message message = this.messageRepository.getMessage(request.MessageId());
 
+        if (message == null){
+            return null;
+        }
+
         return this.messageRepository.deleteMessage(
                 request.User(),
                 message
