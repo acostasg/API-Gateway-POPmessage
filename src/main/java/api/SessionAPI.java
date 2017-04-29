@@ -14,12 +14,12 @@ import javax.ws.rs.core.MediaType;
 public class SessionAPI {
 
     @GET
-    @Path("/token")
+    @Path("/Token")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public String login(
             @HeaderParam(value = "Authorization") String authorization,
-            @QueryParam("token") String token
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);

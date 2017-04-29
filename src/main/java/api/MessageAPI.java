@@ -56,7 +56,7 @@ public class MessageAPI extends AbstractAPI {
             @FormParam("text") String text,
             @FormParam("lat") String lat,
             @FormParam("lon") String lon,
-            @QueryParam("token") String token
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);
@@ -87,7 +87,7 @@ public class MessageAPI extends AbstractAPI {
     public String addVoteLike(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String messageId,
-            @QueryParam("token") String token
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);
@@ -104,7 +104,7 @@ public class MessageAPI extends AbstractAPI {
     public String addVoteDislike(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String messageId,
-            @QueryParam("token") String token
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);
@@ -122,7 +122,7 @@ public class MessageAPI extends AbstractAPI {
     public String delete(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String messageId,
-            @QueryParam("token") String token
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);

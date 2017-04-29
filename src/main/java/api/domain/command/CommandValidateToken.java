@@ -17,11 +17,11 @@ public class CommandValidateToken implements Command<Token, ValidateTokenRequest
     @Override
     public Token execute(ValidateTokenRequest request) {
 
-        if (request.token().isEmpty()) {
+        if (request.Token().isEmpty()) {
             return null;
         }
 
-        return this.tokenRepository.validateToken(request.token());
+        return this.tokenRepository.validateToken(request.Token());
     }
 
 }

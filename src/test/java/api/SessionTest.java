@@ -8,8 +8,8 @@ public class SessionTest extends AbstractTest {
 
     @Test
     public void test_login() {
-        String responseMsg = this.target.path("session/token")
-                .queryParam("token", TOKEN)
+        String responseMsg = this.target.path("session/Token")
+                .queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization",APP_KEY)
                 .get(String.class);

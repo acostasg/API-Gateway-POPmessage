@@ -50,7 +50,7 @@ public class UserTest extends AbstractTest {
     public void test_message_get() throws ParseException {
 
         String responseMsg = this.target.path("user/message/get")
-                .queryParam("token",TOKEN)
+                .queryParam("Token",TOKEN)
                 .request()
                 .header("Authorization",APP_KEY)
                 .get(String.class);

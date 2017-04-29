@@ -1,17 +1,21 @@
 package api.infrastucture.elasticSearch;
 
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
+import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import static org.elasticsearch.common.xcontent.XContentFactory.*;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.Date;
 
 public class ElasticSearchClient {
 
@@ -31,10 +35,15 @@ public class ElasticSearchClient {
     @Inject
     public ElasticSearchClient(){}
 
-    public ElasticSearchClient startConnection() throws UnknownHostException {
-        this.client = new PreBuiltTransportClient(Settings.EMPTY)
-                //.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_1), PORT_1))
-                .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_2), PORT_2));
+    public ElasticSearchClient startConnection() {
+        try{
+            this.client = new PreBuiltTransportClient(Settings.EMPTY)
+                    //.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_1), PORT_1))
+                    .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_2), PORT_2));
+        } catch (UnknownHostException exception){
+            return null;
+        }
+
         return this;
     }
 
@@ -80,7 +89,13 @@ public class ElasticSearchClient {
         return client.prepareGet(index,type,id).get();
     }
 
-    public void stopConnectoion() {
+    public IndexResponse set(String id, String index, String type, XContentBuilder jsonBuilder) {
+        return client.prepareIndex(index, type, id)
+                .setSource(jsonBuilder)
+                .get();
+    }
+
+    public void stopConnection() {
         this.client.close();
     }
 

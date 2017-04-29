@@ -89,14 +89,14 @@ public class UserAPI extends AbstractAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public String getMessages(
             @HeaderParam(value = "Authorization") String authorization,
-            @QueryParam("token") String token
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);
 
         User user = this.getUserByToken(token);
 
-        List<api.domain.entity.Message> messageList = this.getMessagesByUser(user);
+        List<Message> messageList = this.getMessagesByUser(user);
 
         return messageList.toString();
     }

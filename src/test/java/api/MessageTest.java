@@ -39,7 +39,7 @@ public class MessageTest extends AbstractTest {
         input.param("lon", "14.234234");
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
-        Response response = this.target.path("message/create").queryParam("token", TOKEN)
+        Response response = this.target.path("message/create").queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization", APP_KEY)
                 .post(entity);
@@ -53,7 +53,7 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/vote/like/create")
-                .queryParam("token", TOKEN)
+                .queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization", APP_KEY)
                 .post(entity);
@@ -67,7 +67,7 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/vote/dislike/create")
-                .queryParam("token", TOKEN)
+                .queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization", APP_KEY)
                 .post(entity);
@@ -81,7 +81,7 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/delete")
-                .queryParam("token", TOKEN)
+                .queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization", APP_KEY)
                 .post(entity);

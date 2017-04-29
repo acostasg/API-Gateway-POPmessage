@@ -12,7 +12,7 @@ public class ValidateTokenRequest implements Request {
         this.token = new Token(token);
     }
 
-    public Token token() {
+    public Token Token() {
         return this.token;
     }
 

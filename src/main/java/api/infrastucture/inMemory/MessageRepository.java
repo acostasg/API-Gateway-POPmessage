@@ -1,6 +1,7 @@
 package api.infrastucture.inMemory;
 
 import api.domain.entity.*;
+import api.domain.entity.factory.MessageFactory;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
 
     @Override
     public Message deleteMessage(User user, Message message) {
-        return new Message(
+        return MessageFactory.buildMessage(
                 message.ID(),
                 user.ID(),
                 message.Text(),

@@ -24,7 +24,7 @@ public class CommandGetUserByToken implements Command<User, GetUserByTokenReques
 
         Token token = this.useCaseValidateToken.execute(
                 new ValidateTokenRequest(
-                        request.token().hash()
+                        request.Token().hash()
                 )
         );
 

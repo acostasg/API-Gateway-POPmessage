@@ -17,7 +17,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     private static final String type = "user";
 
     private static final String index_token = "token_index";
-    private static final String type_toke = "token";
+    private static final String type_toke = "Token";
 
 
     @Override
@@ -33,6 +33,8 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     @Override
     public User getUserByToken(Token token) {
 
+        startConnection();
+
         SearchResponse response = this.elasticSearchClient.
                 prepareSearch(index_token).
                 setType(type_toke).
@@ -47,10 +49,12 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
         SearchHit searchHit = response.getHits().getAt(0);
 
         GetResponse responseUser = this.elasticSearchClient.get(
-                searchHit.getId(),
+                searchHit.field("userId").getValue().toString(),
                 index,
                 type
         );
+
+        stopConnection();
 
         if(responseUser == null || responseUser.isSourceEmpty()){
             return null;
@@ -58,11 +62,11 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
         return new User(
                 new Id(responseUser.getId()),
-                responseUser.getField("name").toString(),
-                responseUser.getField("userLogin").toString(),
-                responseUser.getField("password").toString(),
+                responseUser.getField("name").getValue().toString(),
+                responseUser.getField("userLogin").getValue().toString(),
+                responseUser.getField("password").getValue().toString(),
                 Status.ACTIVE,
-                new Date(responseUser.getField("crateAt").toString())
+                new Date(responseUser.getField("crateAt").getValue().toString())
         );
     }
 }
