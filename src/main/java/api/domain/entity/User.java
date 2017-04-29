@@ -1,5 +1,7 @@
 package api.domain.entity;
 
+import java.util.Date;
+
 public class User {
 
     private Id ID;
@@ -7,15 +9,39 @@ public class User {
     private String userLogin;
     private String password;
     private Status status;
+    private Date date;
 
-    public User(Id ID, String name, String userLogin, String password, Status status )
-    {
+    public User(
+            Id ID,
+            String name,
+            String userLogin,
+            String password,
+            Status status
+    ) {
+        this(
+                ID,
+                name,
+                userLogin,
+                password,
+                status,
+                new Date()
+        );
+    }
+
+    public User(
+            Id ID,
+            String name,
+            String userLogin,
+            String password,
+            Status status,
+            Date date
+    ) {
         this.ID = ID;
         this.name = name;
         this.userLogin = userLogin;
         this.password = password;
         this.status = status;
-
+        this.date = date;
     }
 
     public Id ID() {
@@ -38,6 +64,10 @@ public class User {
         return status;
     }
 
+    public Date Date() {
+        return date;
+    }
+
     @Override
     public String toString() {
         return "{\"User\":{"
@@ -45,6 +75,7 @@ public class User {
                 ", \"name\":\"" + name + '\"' +
                 ", \"userLogin\":\"" + userLogin + '\"' +
                 ", \"status\":\"" + status + '\"' +
+                ", \"date\":\"" + date.toString() + '\"' +
                 "}}";
     }
 }
