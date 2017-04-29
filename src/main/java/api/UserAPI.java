@@ -19,7 +19,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("user")
-public class UserAPI {
+public class UserAPI extends AbstractAPI {
 
 
     @GET
@@ -94,38 +94,11 @@ public class UserAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        User user = getUserByToken(token);
+        User user = this.getUserByToken(token);
 
-        List<api.domain.entity.Message> messageList = getMessagesByUser(user);
+        List<api.domain.entity.Message> messageList = this.getMessagesByUser(user);
 
         return messageList.toString();
-    }
-
-    private List<Message> getMessagesByUser(api.domain.entity.User user) {
-        CommandGetMessagesByUser userCaseGetMessagesByUser = new CommandGetMessagesByUser(
-                new MessageRepository()
-        );
-
-        return userCaseGetMessagesByUser.execute(
-                new GetMessagesByUserRequest(
-                        user
-                )
-        );
-    }
-
-    private api.domain.entity.User getUserByToken(@QueryParam("token") String token) {
-        CommandGetUserByToken userCaseGetUserByToken = new CommandGetUserByToken(
-                new UserRepository(),
-                new CommandValidateToken(
-                        new TokenRepository()
-                )
-        );
-
-        return userCaseGetUserByToken.execute(
-                new GetUserByTokenRequest(
-                        token
-                )
-        );
     }
 
 }

@@ -17,7 +17,7 @@ import javax.ws.rs.core.MediaType;
 import java.util.List;
 
 @Path("message")
-public class MessageAPI {
+public class MessageAPI extends AbstractAPI {
 
 
     @GET
@@ -61,13 +61,13 @@ public class MessageAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        User user = getUserByToken(token);
+        User user = this.getUserByToken(token);
 
-        CommandCreateMessage useCaseCreateMessage = new CommandCreateMessage(
+        CommandCreateMessage userCase = new CommandCreateMessage(
                 new MessageRepository()
         );
 
-        Message message = useCaseCreateMessage.execute(
+        Message message = userCase.execute(
                 new CreateMessagesRequest(
                         text,
                         user,
@@ -79,20 +79,6 @@ public class MessageAPI {
         return message.toString();
     }
 
-    private User getUserByToken(@QueryParam("token") String token) {
-        CommandGetUserByToken userCaseGetUserByToken = new CommandGetUserByToken(
-                new UserRepository(),
-                new CommandValidateToken(
-                        new TokenRepository()
-                )
-        );
-
-        return userCaseGetUserByToken.execute(
-                new GetUserByTokenRequest(
-                        token
-                )
-        );
-    }
 
     @POST
     @Path("/vote/like/create")
@@ -128,26 +114,6 @@ public class MessageAPI {
         return message.toString();
     }
 
-    private Message getAddVoteToMessage(
-            @FormParam("message") String messageId,
-            @QueryParam("token") String token,
-            Type type
-    ) {
-        User user = getUserByToken(token);
-
-        CommandVoteMessage useCase = new CommandVoteMessage(
-                new MessageRepository()
-        );
-
-        return useCase.execute(
-                new VoteMessagesRequest(
-                        user,
-                        new Id(messageId),
-                        type
-                )
-        );
-    }
-
 
     @POST
     @Path("/delete")
@@ -161,7 +127,7 @@ public class MessageAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        User user = getUserByToken(token);
+        User user = this.getUserByToken(token);
 
         CommandDeleteMessage useCase = new CommandDeleteMessage(
                 new MessageRepository()
