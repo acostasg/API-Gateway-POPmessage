@@ -21,8 +21,8 @@ public class UserTest extends AbstractTest {
     @Test
     public void test_login() {
         String responseMsg = this.target.path("user/login")
-                .queryParam("userName","name")
-                .queryParam("password","1234")
+                .queryParam("userName","name@domain.com")
+                .queryParam("password","1234567")
                 .request()
                 .header("Authorization",APP_KEY)
                 .get(String.class);

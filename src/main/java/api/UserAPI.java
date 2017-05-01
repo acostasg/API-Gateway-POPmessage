@@ -1,8 +1,7 @@
 package api;
 
-import api.domain.command.*;
-import api.domain.command.request.GetMessagesByUserRequest;
-import api.domain.command.request.GetUserByTokenRequest;
+import api.domain.command.CommandLogin;
+import api.domain.command.CommandRegisterUser;
 import api.domain.command.request.LoginUserRequest;
 import api.domain.command.request.RegisterUserRequest;
 import api.domain.entity.Message;
@@ -10,12 +9,12 @@ import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.service.ValidationAppService;
-import api.infrastucture.inMemory.MessageRepository;
 import api.infrastucture.inMemory.TokenRepository;
 import api.infrastucture.inMemory.UserRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("user")
@@ -26,7 +25,7 @@ public class UserAPI extends AbstractAPI {
     @Path("/login")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String login(
+    public Response login(
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("userName") String userName,
             @QueryParam("password") String password
@@ -46,7 +45,10 @@ public class UserAPI extends AbstractAPI {
                 )
         );
 
-        return token.toString();
+        if (null == token || token.isEmpty())
+            return Response.status(Response.Status.UNAUTHORIZED).entity(token).build();
+
+        return Response.ok(token.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 
