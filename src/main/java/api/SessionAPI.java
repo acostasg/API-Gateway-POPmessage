@@ -14,7 +14,7 @@ import javax.ws.rs.core.MediaType;
 public class SessionAPI {
 
     @GET
-    @Path("/Token")
+    @Path("/token")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
     public String login(
