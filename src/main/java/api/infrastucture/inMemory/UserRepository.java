@@ -12,21 +12,19 @@ public class UserRepository implements api.domain.infrastructure.UserRepository 
     private final String password = "1234567";
 
     @Override
-    public User registerUser(String name, String dateOfBirth, String userName, String password )
-    {
-        return this.dummy(name,userName,password);
+    public User registerUser(String name, String dateOfBirth, String userName, String password) {
+        return this.dummy(name, userName, password);
     }
 
     @Override
-    public User loginUser(String userName, String password){
-        if (userName.equals(this.userName) && password.equals(this.password)){
-            return this.dummy("dummyName",userName,password);
+    public User loginUser(String userName, String password) {
+        if (userName.equals(this.userName) && password.equals(this.password)) {
+            return this.dummy("dummyName", userName, password);
         }
         return null;
     }
 
-    private User dummy(String name,String userName,String password)
-    {
+    private User dummy(String name, String userName, String password) {
         return new User(
                 new Id(ID_DUMMY),
                 name,
@@ -38,6 +36,6 @@ public class UserRepository implements api.domain.infrastructure.UserRepository 
 
     @Override
     public User getUserByToken(Token token) {
-        return this.dummy("ByToken","ByTest",token.hash());
+        return this.dummy("ByToken", "ByTest", token.hash());
     }
 }

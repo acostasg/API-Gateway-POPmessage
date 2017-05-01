@@ -3,7 +3,6 @@ package api.infrastucture.inMemory;
 import api.domain.entity.*;
 import api.domain.entity.factory.MessageFactory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

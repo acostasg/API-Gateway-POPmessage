@@ -56,7 +56,7 @@ public class UserAPI extends AbstractAPI {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(
+    public Response create(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("name") String name,
             @FormParam("dateOfBirth") String dateOfBirth,
@@ -81,7 +81,10 @@ public class UserAPI extends AbstractAPI {
                 )
         );
 
-        return user.toString();
+        if (null == user)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        return Response.ok(user.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -89,7 +92,7 @@ public class UserAPI extends AbstractAPI {
     @Consumes(MediaType.TEXT_PLAIN)
     @Path("/message/get")
     @Produces(MediaType.APPLICATION_JSON)
-    public String getMessages(
+    public Response getMessages(
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
@@ -98,9 +101,12 @@ public class UserAPI extends AbstractAPI {
 
         User user = this.getUserByToken(token);
 
+        if (null == user)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
         List<Message> messageList = this.getMessagesByUser(user);
 
-        return messageList.toString();
+        return Response.ok(messageList.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 }

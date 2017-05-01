@@ -1,19 +1,23 @@
 package api;
 
-import api.domain.command.*;
-import api.domain.command.request.*;
+import api.domain.command.CommandCreateMessage;
+import api.domain.command.CommandDeleteMessage;
+import api.domain.command.CommandGetMessagesByLocation;
+import api.domain.command.request.CreateMessagesRequest;
+import api.domain.command.request.DeleteMessagesRequest;
+import api.domain.command.request.GetMessagesByLocationRequest;
 import api.domain.entity.Id;
 import api.domain.entity.Message;
 import api.domain.entity.Type;
 import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
+import api.domain.exceptions.InvalidUser;
 import api.domain.service.ValidationAppService;
 import api.infrastucture.inMemory.MessageRepository;
-import api.infrastucture.inMemory.TokenRepository;
-import api.infrastucture.inMemory.UserRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.List;
 
 @Path("message")
@@ -24,13 +28,19 @@ public class MessageAPI extends AbstractAPI {
     @Path("/get")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String get(
+    public Response get(
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("lat") String lat,
-            @QueryParam("lon") String lon
+            @QueryParam("lon") String lon,
+            @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
         ValidationAppService.validateKeyApp(authorization);
+
+        User user = this.getUserByToken(token);
+
+        if (null == user)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         CommandGetMessagesByLocation useCase = new CommandGetMessagesByLocation(
                 new MessageRepository()
@@ -43,7 +53,7 @@ public class MessageAPI extends AbstractAPI {
                 )
         );
 
-        return messages.toString();
+        return Response.ok(messages.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -51,7 +61,7 @@ public class MessageAPI extends AbstractAPI {
     @Path("/create")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String create(
+    public Response create(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("text") String text,
             @FormParam("lat") String lat,
@@ -62,6 +72,9 @@ public class MessageAPI extends AbstractAPI {
         ValidationAppService.validateKeyApp(authorization);
 
         User user = this.getUserByToken(token);
+
+        if (null == user)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
 
         CommandCreateMessage userCase = new CommandCreateMessage(
                 new MessageRepository()
@@ -76,7 +89,7 @@ public class MessageAPI extends AbstractAPI {
                 )
         );
 
-        return message.toString();
+        return Response.ok(message.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 
@@ -84,7 +97,7 @@ public class MessageAPI extends AbstractAPI {
     @Path("/vote/like/create")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addVoteLike(
+    public Response addVoteLike(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String messageId,
             @QueryParam("Token") String token
@@ -92,16 +105,19 @@ public class MessageAPI extends AbstractAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        Message message = this.getAddVoteToMessage(messageId, token, Type.POSITIVE);
-
-        return message.toString();
+        try {
+            Message message = this.getAddVoteToMessage(messageId, token, Type.POSITIVE);
+            return Response.ok(message.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (InvalidUser exception) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
     @POST
     @Path("/vote/dislike/create")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String addVoteDislike(
+    public Response addVoteDislike(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String messageId,
             @QueryParam("Token") String token
@@ -109,9 +125,12 @@ public class MessageAPI extends AbstractAPI {
 
         ValidationAppService.validateKeyApp(authorization);
 
-        Message message = this.getAddVoteToMessage(messageId, token, Type.NEGATIVE);
-
-        return message.toString();
+        try {
+            Message message = this.getAddVoteToMessage(messageId, token, Type.NEGATIVE);
+            return Response.ok(message.toString(), MediaType.APPLICATION_JSON).build();
+        } catch (InvalidUser exception) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
     }
 
 
@@ -119,7 +138,7 @@ public class MessageAPI extends AbstractAPI {
     @Path("/delete")
     @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.APPLICATION_JSON)
-    public String delete(
+    public Response delete(
             @HeaderParam(value = "Authorization") String authorization,
             @FormParam("message") String messageId,
             @QueryParam("Token") String token
@@ -128,6 +147,9 @@ public class MessageAPI extends AbstractAPI {
         ValidationAppService.validateKeyApp(authorization);
 
         User user = this.getUserByToken(token);
+
+        if (null == user)
+            return Response.status(Response.Status.BAD_REQUEST).build();
 
         CommandDeleteMessage useCase = new CommandDeleteMessage(
                 new MessageRepository()
@@ -140,7 +162,7 @@ public class MessageAPI extends AbstractAPI {
                 )
         );
 
-        return message.toString();
+        return Response.ok(message.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 }

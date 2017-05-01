@@ -1,7 +1,6 @@
 package api.domain.command;
 
 import api.domain.command.request.GetMessagesByLocationRequest;
-import api.domain.command.request.GetMessagesByUserRequest;
 import api.domain.entity.Message;
 import api.domain.infrastructure.MessageRepository;
 

@@ -59,7 +59,7 @@ public class Message {
                 ", \"text\":\"" + text + '\"' +
                 ", \"location\":" + location +
                 ", \"votes\":" + votes +
-                ", \"status\":\"" + status + "\""+
+                ", \"status\":\"" + status + "\"" +
                 "}}";
     }
 }

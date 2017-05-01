@@ -42,7 +42,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                         QueryBuilders.termQuery("token", token.hash())
                 );
 
-        if(response == null || response.getHits().totalHits()<=0){
+        if (response == null || response.getHits().totalHits() <= 0) {
             return null;
         }
 
@@ -56,7 +56,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
         stopConnection();
 
-        if(responseUser == null || responseUser.isSourceEmpty()){
+        if (responseUser == null || responseUser.isSourceEmpty()) {
             return null;
         }
 

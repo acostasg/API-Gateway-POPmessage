@@ -6,7 +6,7 @@ public class Vote {
     private Id userID;
     private Type type;
 
-    public Vote(Id messageID, Id userID, Type type){
+    public Vote(Id messageID, Id userID, Type type) {
         this.messageID = messageID;
         this.userID = userID;
         this.type = type;

@@ -9,6 +9,7 @@ import api.infrastucture.inMemory.TokenRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("session")
 public class SessionAPI {
@@ -17,7 +18,7 @@ public class SessionAPI {
     @Path("/token")
     @Consumes(MediaType.TEXT_PLAIN)
     @Produces(MediaType.APPLICATION_JSON)
-    public String login(
+    public Response login(
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
@@ -34,6 +35,9 @@ public class SessionAPI {
                 )
         );
 
-        return tokenValid.toString();
+        if (null == tokenValid || tokenValid.isEmpty())
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        return Response.ok(tokenValid.toString(), MediaType.APPLICATION_JSON).build();
     }
 }

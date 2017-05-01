@@ -14,7 +14,7 @@ public class RegisterUserRequest implements Request {
             String userName,
             String password,
             boolean privacyPolicy
-    ){
+    ) {
         this.name = name;
         this.dateOfBirth = dateOfBirth;
         this.userName = userName;

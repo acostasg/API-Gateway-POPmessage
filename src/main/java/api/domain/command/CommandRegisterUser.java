@@ -4,18 +4,18 @@ import api.domain.command.request.RegisterUserRequest;
 import api.domain.entity.User;
 import api.domain.infrastructure.UserRepository;
 
-public class CommandRegisterUser implements Command<User,RegisterUserRequest> {
+public class CommandRegisterUser implements Command<User, RegisterUserRequest> {
 
     private UserRepository userRepository;
 
-    public CommandRegisterUser(UserRepository userRepository ){
+    public CommandRegisterUser(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
     @Override
     public User execute(RegisterUserRequest request) {
 
-        if(!request.PrivacyPolicy()){
+        if (!request.PrivacyPolicy()) {
             return null;
         }
 

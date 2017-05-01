@@ -19,6 +19,7 @@ public class MessageTest extends AbstractTest {
         String responseMsg = this.target.path("message/get")
                 .queryParam("lat", "12.123123")
                 .queryParam("lon", "34.234234")
+                .queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization", APP_KEY)
                 .get(String.class);
@@ -39,7 +40,8 @@ public class MessageTest extends AbstractTest {
         input.param("lon", "14.234234");
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
-        Response response = this.target.path("message/create").queryParam("Token", TOKEN)
+        Response response = this.target.path("message/create")
+                .queryParam("Token", TOKEN)
                 .request()
                 .header("Authorization", APP_KEY)
                 .post(entity);

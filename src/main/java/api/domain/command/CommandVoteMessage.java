@@ -19,7 +19,7 @@ public class CommandVoteMessage implements Command<Message, VoteMessagesRequest>
 
         Message message = this.messageRepository.getMessage(request.MessageId());
 
-        if (message == null){
+        if (message == null) {
             return null;
         }
 

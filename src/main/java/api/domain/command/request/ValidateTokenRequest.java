@@ -8,7 +8,7 @@ public class ValidateTokenRequest implements Request {
 
     public ValidateTokenRequest(
             String token
-    ){
+    ) {
         this.token = new Token(token);
     }
 

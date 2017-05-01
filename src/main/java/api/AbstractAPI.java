@@ -11,6 +11,7 @@ import api.domain.entity.Id;
 import api.domain.entity.Message;
 import api.domain.entity.Type;
 import api.domain.entity.User;
+import api.domain.exceptions.InvalidUser;
 import api.infrastucture.inMemory.MessageRepository;
 import api.infrastucture.inMemory.TokenRepository;
 import api.infrastucture.inMemory.UserRepository;
@@ -38,8 +39,12 @@ abstract class AbstractAPI {
             String messageId,
             String token,
             Type type
-    ) {
+    ) throws InvalidUser {
         User user = this.getUserByToken(token);
+
+        if(null == user){
+            throw new InvalidUser("Invalid User");
+        }
 
         CommandVoteMessage useCase = new CommandVoteMessage(
                 new MessageRepository()
@@ -54,7 +59,7 @@ abstract class AbstractAPI {
         );
     }
 
-    List<Message> getMessagesByUser(api.domain.entity.User user) {
+    List<Message> getMessagesByUser(User user) {
         CommandGetMessagesByUser userCaseGetMessagesByUser = new CommandGetMessagesByUser(
                 new MessageRepository()
         );

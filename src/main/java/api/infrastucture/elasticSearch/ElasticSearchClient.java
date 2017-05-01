@@ -10,12 +10,10 @@ import org.elasticsearch.common.transport.InetSocketTransportAddress;
 import org.elasticsearch.common.xcontent.XContentBuilder;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
-import static org.elasticsearch.common.xcontent.XContentFactory.*;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
 
 public class ElasticSearchClient {
 
@@ -33,26 +31,27 @@ public class ElasticSearchClient {
     private TransportClient client;
 
     @Inject
-    public ElasticSearchClient(){}
+    public ElasticSearchClient() {
+    }
 
     public ElasticSearchClient startConnection() {
-        try{
+        try {
             this.client = new PreBuiltTransportClient(Settings.EMPTY)
                     //.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_1), PORT_1))
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_2), PORT_2));
-        } catch (UnknownHostException exception){
+        } catch (UnknownHostException exception) {
             return null;
         }
 
         return this;
     }
 
-    public ElasticSearchClient prepareSearch(String index){
+    public ElasticSearchClient prepareSearch(String index) {
         this.index = index;
         return this;
     }
 
-    public ElasticSearchClient setType(String type){
+    public ElasticSearchClient setType(String type) {
         this.type = type;
         return this;
     }
@@ -84,9 +83,8 @@ public class ElasticSearchClient {
                 .get();
     }
 
-    public GetResponse get(String id, String index, String type)
-    {
-        return client.prepareGet(index,type,id).get();
+    public GetResponse get(String id, String index, String type) {
+        return client.prepareGet(index, type, id).get();
     }
 
     public IndexResponse set(String id, String index, String type, XContentBuilder jsonBuilder) {

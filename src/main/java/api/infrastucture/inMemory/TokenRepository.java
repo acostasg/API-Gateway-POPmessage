@@ -17,11 +17,11 @@ public class TokenRepository implements api.domain.infrastructure.TokenRepositor
     @Override
     public Token validateToken(Token token) {
 
-        if (token.isEmpty()){
+        if (token.isEmpty()) {
             return null;
         }
 
-        if (token.isHashEqual(DUMMY_TOKEN)){
+        if (token.isHashEqual(DUMMY_TOKEN)) {
             return new Token(DUMMY_TOKEN);
         }
 

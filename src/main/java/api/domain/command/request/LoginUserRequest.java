@@ -8,7 +8,7 @@ public class LoginUserRequest implements Request {
     public LoginUserRequest(
             String userName,
             String password
-    ){
+    ) {
         this.userName = userName;
         this.password = password;
     }
