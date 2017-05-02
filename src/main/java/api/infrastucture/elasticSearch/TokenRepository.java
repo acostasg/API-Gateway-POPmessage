@@ -53,6 +53,8 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
                 return null;
             }
 
+            //TODO save to elasticsearch
+
             return token;
 
         } catch (UnsupportedEncodingException | JWTCreationException exception) {
@@ -82,5 +84,10 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
         } catch (UnsupportedEncodingException | JWTVerificationException exception) {
             return null;
         }
+    }
+
+    @Override
+    public void deleteToken(User user, Token token) {
+        //TODO delete elasticsearch
     }
 }

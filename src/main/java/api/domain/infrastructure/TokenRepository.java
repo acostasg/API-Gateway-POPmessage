@@ -9,4 +9,6 @@ public interface TokenRepository {
 
     Token validateToken(Token token);
 
+    void deleteToken(User user, Token token);
+
 }

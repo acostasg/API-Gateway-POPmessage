@@ -1,9 +1,13 @@
 package api;
 
 import api.domain.command.CommandLogin;
+import api.domain.command.CommandLogout;
 import api.domain.command.CommandRegisterUser;
+import api.domain.command.CommandValidateToken;
+import api.domain.command.request.LogOutUserRequest;
 import api.domain.command.request.LoginUserRequest;
 import api.domain.command.request.RegisterUserRequest;
+import api.domain.command.request.ValidateTokenRequest;
 import api.domain.entity.Message;
 import api.domain.entity.Token;
 import api.domain.entity.User;
@@ -49,6 +53,36 @@ public class UserAPI extends AbstractAPI {
             return Response.status(Response.Status.UNAUTHORIZED).entity(token).build();
 
         return Response.ok(token.toString(), MediaType.APPLICATION_JSON).build();
+    }
+
+    @GET
+    @Path("/logout")
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response logout(
+            @HeaderParam(value = "Authorization") String authorization,
+            @QueryParam("Token") String token
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
+        User user = this.getUserByToken(token);
+
+        if (null == user)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        CommandLogout userCase = new CommandLogout(
+                new TokenRepository()
+        );
+
+        userCase.execute(
+                new LogOutUserRequest(
+                        user,
+                        new Token(token)
+                )
+        );
+
+        return Response.ok().build();
     }
 
 

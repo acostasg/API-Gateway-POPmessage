@@ -27,4 +27,8 @@ public class TokenRepository implements api.domain.infrastructure.TokenRepositor
 
         return null;
     }
+
+    @Override
+    public void deleteToken(User user, Token token) {
+    }
 }

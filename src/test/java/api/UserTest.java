@@ -30,6 +30,16 @@ public class UserTest extends AbstractTest {
     }
 
     @Test
+    public void test_logout() {
+        Response responseMsg = this.target.path("user/logout")
+                .queryParam("Token",TOKEN)
+                .request()
+                .header("Authorization",APP_KEY)
+                .get();
+        assertEquals(Response.Status.OK.getStatusCode(), responseMsg.getStatus());
+    }
+
+    @Test
     public void test_user_create() {
         Form input = new Form();
         input.param("name", "testName");
