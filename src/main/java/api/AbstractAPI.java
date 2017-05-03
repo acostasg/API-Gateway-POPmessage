@@ -42,7 +42,7 @@ abstract class AbstractAPI {
     ) throws InvalidUser {
         User user = this.getUserByToken(token);
 
-        if(null == user){
+        if (null == user) {
             throw new InvalidUser("Invalid User");
         }
 

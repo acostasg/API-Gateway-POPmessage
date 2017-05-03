@@ -19,7 +19,6 @@ public abstract class AbstractTest {
     protected WebTarget target;
 
 
-
     @Before
     public void setUp() throws Exception {
         // start the server

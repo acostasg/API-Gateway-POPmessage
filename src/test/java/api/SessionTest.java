@@ -11,7 +11,7 @@ public class SessionTest extends AbstractTest {
         String responseMsg = this.target.path("session/token")
                 .queryParam("Token", TOKEN)
                 .request()
-                .header("Authorization",APP_KEY)
+                .header("Authorization", APP_KEY)
                 .get(String.class);
         assertEquals("{\"Token\":{\"hash\":\"sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj\"}}", responseMsg);
     }
