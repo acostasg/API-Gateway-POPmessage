@@ -1,5 +1,9 @@
 package api.domain.entity;
 
+import api.domain.service.FormatDataService;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class User {
@@ -75,7 +79,7 @@ public class User {
                 ", \"name\":\"" + name + '\"' +
                 ", \"userLogin\":\"" + userLogin + '\"' +
                 ", \"status\":\"" + status + '\"' +
-                ", \"date\":\"" + date.toString() + '\"' +
+                ", \"date\":\"" + FormatDataService.DataFormat(this.date) + '\"' +
                 "}}";
     }
 }

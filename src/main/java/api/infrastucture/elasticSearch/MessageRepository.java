@@ -1,7 +1,7 @@
 package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
-import api.domain.entity.factory.MessageFactory;
+import api.domain.factory.MessageFactory;
 import org.elasticsearch.action.get.GetResponse;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.QueryBuilders;

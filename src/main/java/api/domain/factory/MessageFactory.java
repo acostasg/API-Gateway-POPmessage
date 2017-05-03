@@ -1,4 +1,4 @@
-package api.domain.entity.factory;
+package api.domain.factory;
 
 import api.domain.entity.*;
 
