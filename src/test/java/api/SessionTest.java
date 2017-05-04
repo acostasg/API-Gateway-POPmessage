@@ -13,7 +13,7 @@ public class SessionTest extends AbstractTest {
                 .request()
                 .header("Authorization", APP_KEY)
                 .get(String.class);
-        assertEquals("{\"Token\":{\"hash\":\"sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj\"}}", responseMsg);
+        assertEquals("{\"hash\":\"sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj\"}", responseMsg);
     }
 
 }
