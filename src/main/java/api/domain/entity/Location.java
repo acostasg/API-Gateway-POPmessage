@@ -20,9 +20,9 @@ public class Location {
 
     @Override
     public String toString() {
-        return "{ \"Location\":{" +
+        return "{" +
                 "\"lat\":\"" + lat + '\"' +
                 ", \"lon\":\"" + lon + '\"' +
-                "}}";
+                "}";
     }
 }

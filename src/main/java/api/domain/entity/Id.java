@@ -14,8 +14,10 @@ public class Id {
 
     @Override
     public String toString() {
-        return "\"Id\":{" +
-                "\"id\":\"" + id + '\"' +
-                "}";
+        return "\"Id\":{\"id\":\"" + id + "\"}";
+    }
+
+    public String toUserId() {
+        return "\"userId\":{\"id\":\"" + id + "\"}";
     }
 }

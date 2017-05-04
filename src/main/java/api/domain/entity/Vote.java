@@ -26,10 +26,10 @@ public class Vote {
 
     @Override
     public String toString() {
-        return "{\"Vote\":{" +
+        return "{" +
                 messageID +
                 "," + userID +
                 ", \"type\":\"" + type + "\"" +
-                "}}";
+                "}";
     }
 }

@@ -72,12 +72,12 @@ public class User {
 
     @Override
     public String toString() {
-        return "{\"User\":{"
+        return "{"
                 + ID +
                 ", \"name\":\"" + name + '\"' +
                 ", \"userLogin\":\"" + userLogin + '\"' +
                 ", \"status\":\"" + status + '\"' +
                 ", \"date\":\"" + FormatDataService.DataFormat(this.date) + '\"' +
-                "}}";
+                "}";
     }
 }

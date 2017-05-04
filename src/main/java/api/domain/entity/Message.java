@@ -53,13 +53,13 @@ public class Message {
 
     @Override
     public String toString() {
-        return "{ \"Message\":{" +
+        return "{" +
                 ID +
-                "," + userID +
+                "," + userID.toUserId() +
                 ", \"text\":\"" + text + '\"' +
                 ", \"location\":" + location +
                 ", \"votes\":" + votes +
                 ", \"status\":\"" + status + "\"" +
-                "}}";
+                "}";
     }
 }
