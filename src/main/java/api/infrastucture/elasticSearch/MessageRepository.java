@@ -43,7 +43,10 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             messages.add(
                     MessageFactory.buildMessage(
                             new Id(searchHit.getId()),
-                            new Id(searchHit.field("user.ID").toString()),
+                            new User(
+                                    new Id(searchHit.field("user.ID").toString()),
+                                    searchHit.field("user.name").toString()
+                            ),
                             searchHit.field("text").toString(),
                             new Location(
                                     searchHit.field("location.lat").getValue().toString(),
@@ -99,7 +102,10 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
         return MessageFactory.buildMessage(
                 new Id(response.getId()),
-                new Id(response.getField("user.ID").toString()),
+                new User(
+                        new Id(response.getField("user.ID").toString()),
+                        response.getField("user.name").toString()
+                ),
                 response.getField("text").toString(),
                 new Location(
                         response.getField("location.lat").getValue().toString(),

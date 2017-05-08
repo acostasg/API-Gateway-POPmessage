@@ -9,7 +9,8 @@ import java.util.Random;
 
 public class MessageRepository implements api.domain.infrastructure.MessageRepository {
 
-    static final private String DUMMY_ID = "DummyId";
+    static final private String DUMMY_ID = "Dummy Id";
+    static final private String DUMMY_NAME = "Dummy Name";
 
     private final Random rnd;
 
@@ -59,7 +60,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
     public Message deleteMessage(User user, Message message) {
         return MessageFactory.buildMessage(
                 message.ID(),
-                user.ID(),
+                user,
                 message.Text(),
                 message.Location(),
                 message.Votes(),
@@ -77,7 +78,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
         ));
         return new Message(
                 message.ID(),
-                user.ID(),
+                user,
                 message.Text(),
                 message.Location(),
                 votes,
@@ -102,7 +103,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
     private Message getMessageDummy(String id, String userId, String text, Location location) {
         return new Message(
                 new Id(id),
-                new Id(userId),
+                new User(new Id(userId), DUMMY_NAME),
                 text,
                 location,
                 getVotes(),

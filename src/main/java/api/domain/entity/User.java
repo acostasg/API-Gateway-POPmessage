@@ -15,6 +15,20 @@ public class User {
 
     public User(
             Id ID,
+            String name
+    ) {
+        this(
+                ID,
+                name,
+                null,
+                null,
+                null,
+                new Date()
+        );
+    }
+
+    public User(
+            Id ID,
             String name,
             String userLogin,
             String password,
@@ -79,5 +93,12 @@ public class User {
                 ", \"status\":\"" + status + '\"' +
                 ", \"date\":\"" + FormatDataService.DataFormat(this.date) + '\"' +
                 "}";
+    }
+
+    String toStringByMessage() {
+        return "{"
+                + ID +
+                ", \"name\":\"" + name + '\"'
+                + "}";
     }
 }

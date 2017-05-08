@@ -5,7 +5,7 @@ import java.util.List;
 public class Message {
 
     private Id ID;
-    private Id userID;
+    private User user;
     private String text;
     private Location location;
     private List<Vote> votes;
@@ -13,14 +13,14 @@ public class Message {
 
     public Message(
             Id ID,
-            Id userID,
+            User user,
             String text,
             Location location,
             List<Vote> votes,
             Status status
     ) {
         this.ID = ID;
-        this.userID = userID;
+        this.user = user;
         this.text = text;
         this.location = location;
         this.votes = votes;
@@ -31,8 +31,8 @@ public class Message {
         return ID;
     }
 
-    public Id UserID() {
-        return userID;
+    public User user() {
+        return user;
     }
 
     public String Text() {
@@ -55,7 +55,7 @@ public class Message {
     public String toString() {
         return "{" +
                 ID +
-                "," + userID.toUserId() +
+                ", \"user\":" + user.toStringByMessage() +
                 ", \"text\":\"" + text + '\"' +
                 ", \"location\":" + location +
                 ", \"votes\":" + votes +
