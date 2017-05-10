@@ -12,19 +12,25 @@ import api.domain.entity.Message;
 import api.domain.entity.Type;
 import api.domain.entity.User;
 import api.domain.exceptions.InvalidUser;
-import api.infrastucture.inMemory.MessageRepository;
-import api.infrastucture.inMemory.TokenRepository;
+import api.domain.infrastructure.MessageRepository;
+import api.domain.infrastructure.TokenRepository;
 import api.infrastucture.inMemory.UserRepository;
 
+import javax.inject.Inject;
 import java.util.List;
 
 abstract class AbstractAPI {
+
+    @Inject
+    protected MessageRepository messageRepository;
+    @Inject
+    protected TokenRepository tokenRepository;
 
     User getUserByToken(String token) {
         CommandGetUserByToken userCaseGetUserByToken = new CommandGetUserByToken(
                 new UserRepository(),
                 new CommandValidateToken(
-                        new TokenRepository()
+                        this.tokenRepository
                 )
         );
 
@@ -47,7 +53,7 @@ abstract class AbstractAPI {
         }
 
         CommandVoteMessage useCase = new CommandVoteMessage(
-                new MessageRepository()
+                this.messageRepository
         );
 
         return useCase.execute(
@@ -61,7 +67,7 @@ abstract class AbstractAPI {
 
     List<Message> getMessagesByUser(User user) {
         CommandGetMessagesByUser userCaseGetMessagesByUser = new CommandGetMessagesByUser(
-                new MessageRepository()
+                this.messageRepository
         );
 
         return userCaseGetMessagesByUser.execute(

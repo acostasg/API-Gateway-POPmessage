@@ -2,6 +2,7 @@ package api;
 
 
 import org.glassfish.grizzly.http.server.HttpServer;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.After;
 import org.junit.Before;
 
@@ -9,7 +10,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 
-public abstract class AbstractTest {
+public abstract class AbstractTest extends ResourceConfig {
 
     protected static final String APP_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
 
@@ -22,7 +23,7 @@ public abstract class AbstractTest {
     @Before
     public void setUp() throws Exception {
         // start the server
-        this.server = Main.startServer();
+        this.server = Main.startServerTest();
         // create the client
         Client c = ClientBuilder.newClient();
 

@@ -13,7 +13,6 @@ import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.exceptions.InvalidUser;
 import api.domain.service.ValidationAppService;
-import api.infrastucture.inMemory.MessageRepository;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -43,7 +42,7 @@ public class MessageAPI extends AbstractAPI {
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         CommandGetMessagesByLocation useCase = new CommandGetMessagesByLocation(
-                new MessageRepository()
+                this.messageRepository
         );
 
         List<Message> messages = useCase.execute(
@@ -77,7 +76,7 @@ public class MessageAPI extends AbstractAPI {
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
         CommandCreateMessage userCase = new CommandCreateMessage(
-                new MessageRepository()
+                this.messageRepository
         );
 
         Message message = userCase.execute(
@@ -152,7 +151,7 @@ public class MessageAPI extends AbstractAPI {
             return Response.status(Response.Status.BAD_REQUEST).build();
 
         CommandDeleteMessage useCase = new CommandDeleteMessage(
-                new MessageRepository()
+                this.messageRepository
         );
 
         Message message = useCase.execute(

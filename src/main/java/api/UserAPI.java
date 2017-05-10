@@ -10,10 +10,10 @@ import api.domain.entity.Message;
 import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
+import api.domain.infrastructure.UserRepository;
 import api.domain.service.ValidationAppService;
-import api.infrastucture.inMemory.TokenRepository;
-import api.infrastucture.inMemory.UserRepository;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +22,8 @@ import java.util.List;
 @Path("user")
 public class UserAPI extends AbstractAPI {
 
+    @Inject
+    private UserRepository userRepository;
 
     @GET
     @Path("/login")
@@ -36,8 +38,8 @@ public class UserAPI extends AbstractAPI {
         ValidationAppService.validateKeyApp(authorization);
 
         CommandLogin userCase = new CommandLogin(
-                new UserRepository(),
-                new TokenRepository()
+                this.userRepository,
+                this.tokenRepository
         );
 
         Token token = userCase.execute(
@@ -70,7 +72,7 @@ public class UserAPI extends AbstractAPI {
             return Response.status(Response.Status.BAD_REQUEST).build();
 
         CommandLogout userCase = new CommandLogout(
-                new TokenRepository()
+                this.tokenRepository
         );
 
         userCase.execute(
@@ -100,7 +102,7 @@ public class UserAPI extends AbstractAPI {
         ValidationAppService.validateKeyApp(authorization);
 
         CommandRegisterUser userCase = new CommandRegisterUser(
-                new UserRepository()
+                this.userRepository
         );
 
         User user = userCase.execute(

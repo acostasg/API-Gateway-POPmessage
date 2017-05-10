@@ -4,15 +4,19 @@ import api.domain.command.CommandValidateToken;
 import api.domain.command.request.ValidateTokenRequest;
 import api.domain.entity.Token;
 import api.domain.exceptions.InvalidAppKey;
+import api.domain.infrastructure.TokenRepository;
 import api.domain.service.ValidationAppService;
-import api.infrastucture.inMemory.TokenRepository;
 
+import javax.inject.Inject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("session")
 public class SessionAPI {
+
+    @Inject
+    private TokenRepository tokenRepository;
 
     @GET
     @Path("/token")
@@ -26,7 +30,7 @@ public class SessionAPI {
         ValidationAppService.validateKeyApp(authorization);
 
         CommandValidateToken userCase = new CommandValidateToken(
-                new TokenRepository()
+                this.tokenRepository
         );
 
         Token tokenValid = userCase.execute(
