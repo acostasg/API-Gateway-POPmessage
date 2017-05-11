@@ -13,12 +13,11 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 
 public class ElasticSearchClient {
 
     private static final String HOST_1 = "es-proxy";
-    private static final String HOST_2 = "http://0.0.0.0:17560";
+    private static final String HOST_2 = "0.0.0.0";
     private static final int PORT_1 = 9200;
     private static final int PORT_2 = 17560;
 
@@ -36,11 +35,14 @@ public class ElasticSearchClient {
 
     public ElasticSearchClient startConnection() {
         try {
-            this.client = new PreBuiltTransportClient(Settings.EMPTY)
+            Settings settings = Settings.builder()
+                    .put("cluster.name","popmessage-es-cluster")
+                    .put("client.transport.sniff",true).build();
+            this.client = new PreBuiltTransportClient(settings)
                     //.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_1), PORT_1))
                     .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_2), PORT_2));
-        } catch (UnknownHostException exception) {
-            return null;
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
 
         return this;
@@ -88,7 +90,7 @@ public class ElasticSearchClient {
     }
 
     public IndexResponse set(String id, String index, String type, XContentBuilder jsonBuilder) {
-        return client.prepareIndex(index, type, id)
+        return this.client.prepareIndex(index, type, id)
                 .setSource(jsonBuilder)
                 .get();
     }

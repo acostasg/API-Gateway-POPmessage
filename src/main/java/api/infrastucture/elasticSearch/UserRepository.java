@@ -4,12 +4,22 @@ import api.domain.entity.Id;
 import api.domain.entity.Status;
 import api.domain.entity.Token;
 import api.domain.entity.User;
+import api.domain.factory.MessageFactory;
+import api.domain.factory.UserFactory;
 import org.elasticsearch.action.get.GetResponse;
+import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.common.xcontent.XContentBuilder;
+import org.elasticsearch.common.xcontent.XContentFactory;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
+import java.util.UUID;
 
 public class UserRepository extends AbstractElasticSearchRepository implements api.domain.infrastructure.UserRepository {
 
@@ -22,7 +32,56 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
     @Override
     public User registerUser(String name, String dateOfBirth, String userName, String password) {
-        return null;
+        try {
+            startConnection();
+
+            UUID uuid = UUID.randomUUID();
+
+            User user = UserFactory.build(
+                    new Id( uuid.toString()),
+                    name,
+                    userName,
+                    password, //TODO encrypted to secret key
+                    Status.ACTIVE,
+                    getDateFromString(dateOfBirth)
+            );
+
+
+            XContentBuilder builder = XContentFactory.jsonBuilder()
+                    .startObject()
+                    .field("ID", user.ID().Id())
+                    .field("name", user.Name())
+                    .field("userLogin", user.UserLogin())
+                    .field("password", user.Password())
+                    .field("status", user.Status())
+                    .field("crateAt", user.Date())
+                    .endObject();
+
+            IndexResponse response = this.elasticSearchClient.set(
+                    uuid.toString(),
+                    index,
+                    type,
+                    builder
+            );
+
+            System.out.println(response.toString());
+
+            return user;
+        } catch (java.io.IOException exception){
+            return null;
+        }
+
+    }
+
+    private Date getDateFromString(String dateOfBirth) {
+        DateFormat format = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
+        Date date;
+        try {
+            date = format.parse(dateOfBirth);
+        } catch (ParseException e) {
+           date = new Date();
+        }
+        return date;
     }
 
     @Override
