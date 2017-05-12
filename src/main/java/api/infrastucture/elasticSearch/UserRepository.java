@@ -5,6 +5,7 @@ import api.domain.entity.Status;
 import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.factory.UserFactory;
+import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
 import com.google.gson.JsonObject;
@@ -22,7 +23,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     private static final String type = "user";
 
     private static final String index_token = "token_index";
-    private static final String type_toke = "Token";
+    private static final String type_toke = "token";
 
 
     @Override
@@ -37,7 +38,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     new Id(uuid.toString()),
                     name,
                     userName,
-                    password, //TODO encrypted to secret key
+                    EncodeWrapper.Encoder(password),
                     Status.ACTIVE,
                     getDateFromString(dateOfBirth)
             );
@@ -117,21 +118,24 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                             UserByTokenDSL.get(token)
                     );
 
-            if (response.isSucceeded() || response.getTotal() <= 0) {
+            if (!response.isSucceeded() || response.getTotal() <= 0) {
                 return null;
             }
 
             SearchResult.Hit<JSONObject, Void> tokenJson = response.getFirstHit(JSONObject.class);
 
-            JestResult responseUser = this.elasticSearchClient.get(
+            JestResult responseUser = this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .get(
                     tokenJson.source.get("userId").toString()
             );
 
-            if (responseUser.isSucceeded()) {
+            if (!responseUser.isSucceeded()) {
                 return null;
             }
 
-            JsonObject userJson = responseUser.getJsonObject();
+            JSONObject userJson = responseUser.getSourceAsObject(JSONObject.class);
             stopConnection();
             return UserFactory.build(
                     new Id(userJson.get("ID").toString()),

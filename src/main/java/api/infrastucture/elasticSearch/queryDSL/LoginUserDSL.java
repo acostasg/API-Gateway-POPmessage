@@ -8,7 +8,7 @@ public class LoginUserDSL {
                 "        \"bool\": {\n" +
                 "            \"must\": [\n" +
                 "            { \"match\": { \"userLogin\": \"" + userName + "\"}},\n" +
-                "            { \"match\": { \"password\": \"" + password + "\"}}\n" +
+                "            { \"match\": { \"password\": \"" + EncodeWrapper.Encoder(password) + "\"}}\n" +
                 "            ]\n" +
                 "        }\n" +
                 "    }\n" +

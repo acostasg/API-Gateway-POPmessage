@@ -1,7 +1,12 @@
 package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
+import api.domain.factory.UserFactory;
+import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
+import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
 import io.searchbox.core.SearchResult;
+import org.glassfish.hk2.utilities.reflection.Logger;
+import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +23,38 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public List<Message> getMessagesByUser(User user, int limit) {
-        startConnection();
-       /* SearchResponse response = this.elasticSearchClient.
-                prepareSearch(index).
-                setType(type).
-                executeQuery(QueryBuilders.termQuery("user.ID", user.ID().Id()));
-        stopConnection();
+        try {
 
-        if (response.getHits().totalHits() <= 0) {
-            return null;
+            startConnection();
+
+            SearchResult response = this.elasticSearchClient.
+                    prepareSearch(index).
+                    setType(type).
+                    executeQuery(
+                            MessageByUserDSL.get(user)
+                    );
+
+
+            if (!response.isSucceeded() || response.getTotal() <= 0) {
+                stopConnection();
+                return null;
+            }
+
+            SearchResult.Hit<JSONObject, Void> messages = response.getFirstHit(JSONObject.class);
+            stopConnection();
+            /*return Mess.build(
+                    new Id(user.id),
+                    user.source.get("name").toString(),
+                    user.source.get("userLogin").toString(),
+                    user.source.get("password").toString(),
+                    Status.valueOf(user.source.get("status").toString()),
+                    getDateFromString(user.source.get("crateAt").toString())
+            );*/
+        } catch (Exception e) {
+            Logger.printThrowable(e);
+            e.printStackTrace();
         }
 
-        return builderMessages(response);*/
         return null;
     }
 

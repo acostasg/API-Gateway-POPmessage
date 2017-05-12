@@ -3,6 +3,7 @@ package api.infrastucture.elasticSearch;
 import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.infrastructure.UserRepository;
+import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -10,6 +11,7 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.searchbox.core.DocumentResult;
+import org.glassfish.jersey.internal.util.Base64;
 import org.json.simple.JSONObject;
 
 import javax.inject.Inject;
@@ -45,7 +47,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
 
 
             JSONObject obj = new JSONObject();
-            obj.put("hash", token.hash());
+            obj.put("hash", EncodeWrapper.Encoder(token.hash()));
             obj.put("userId", user.ID().Id());
             obj.put("crateAt", getDateFromDate(new Date()));
 
@@ -104,7 +106,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     }
 
     private boolean isValidTokenByUser(User user, DecodedJWT jwt) {
-        return user == null || !user.ID().Id().equals(jwt.getSubject());
+        return user != null || !user.ID().Id().equals(jwt.getSubject());
     }
 
     @Override
