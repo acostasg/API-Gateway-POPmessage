@@ -1,102 +1,85 @@
 package api.infrastucture.elasticSearch;
 
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.transport.TransportClient;
-import org.elasticsearch.common.settings.Settings;
-import org.elasticsearch.common.transport.InetSocketTransportAddress;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.index.query.QueryBuilder;
-import org.elasticsearch.transport.client.PreBuiltTransportClient;
+import io.searchbox.client.JestClient;
+import io.searchbox.client.JestClientFactory;
+import io.searchbox.client.JestResult;
+import io.searchbox.client.config.HttpClientConfig;
+import io.searchbox.core.*;
 
 import javax.inject.Inject;
-import java.net.InetAddress;
+import javax.inject.Singleton;
 
 public class ElasticSearchClient {
 
-    private static final String HOST_1 = "es-proxy";
-    private static final String HOST_2 = "0.0.0.0";
-    private static final int PORT_1 = 9200;
-    private static final int PORT_2 = 17560;
+    private static final String HOST = "http://0.0.0.0:17560";
 
     private String index;
     private String type;
 
-    private static final int from = 0;
-    private static final int size = 10;
-
-    private TransportClient client;
+    private JestClient client;
 
     @Inject
+    @Singleton
     public ElasticSearchClient() {
     }
 
-    public ElasticSearchClient startConnection() {
+
+    void startConnection() {
         try {
-            Settings settings = Settings.builder()
-                    .put("cluster.name","popmessage-es-cluster")
-                    .put("client.transport.sniff",true).build();
-            this.client = new PreBuiltTransportClient(settings)
-                    //.addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_1), PORT_1))
-                    .addTransportAddress(new InetSocketTransportAddress(InetAddress.getByName(HOST_2), PORT_2));
+            JestClientFactory factory = new JestClientFactory();
+            factory.setHttpClientConfig(new HttpClientConfig
+                    .Builder(HOST)
+                    .defaultMaxTotalConnectionPerRoute(2)
+                    .maxTotalConnection(20)
+                    .discoveryEnabled(true)
+                    .multiThreaded(true)
+                    .build()
+            );
+            this.client = factory.getObject();
         } catch (Exception exception) {
             exception.printStackTrace();
         }
-
-        return this;
     }
 
-    public ElasticSearchClient prepareSearch(String index) {
+    ElasticSearchClient prepareSearch(String index) {
         this.index = index;
         return this;
     }
 
-    public ElasticSearchClient setType(String type) {
+    ElasticSearchClient setType(String type) {
         this.type = type;
         return this;
     }
 
-    public SearchResponse executeQuery(QueryBuilder query) {
-        return this.executeQuery(query, from, size);
+
+    SearchResult executeQuery(String searchSource) throws java.io.IOException {
+        Search search = new Search.Builder(searchSource)
+                .addIndex(this.index)
+                .addType(this.type)
+                .build();
+
+        return client.execute(search);
     }
 
-    public SearchResponse executeQuery(QueryBuilder query, QueryBuilder filter) {
-        return this.executeQuery(query, filter, from, size);
+
+    JestResult get(String id) throws java.io.IOException {
+
+        Get get = new Get.Builder(this.index, id).type(this.type).build();
+
+        return client.execute(get);
     }
 
-    public SearchResponse executeQuery(QueryBuilder query, int from, int size) {
-        return this.client.prepareSearch(index)
-                .setTypes(type)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(query)
-                .setFrom(from).setSize(size).setExplain(true)
-                .get();
+    DocumentResult set(String jsonBuilder, String id) throws java.io.IOException {
+        Index index = new Index.Builder(jsonBuilder).id(id).index(this.index).type(this.type).build();
+        return client.execute(index);
     }
 
-    public SearchResponse executeQuery(QueryBuilder query, QueryBuilder filter, int from, int size) {
-        return this.client.prepareSearch(index)
-                .setTypes(type)
-                .setSearchType(SearchType.DFS_QUERY_THEN_FETCH)
-                .setQuery(query)
-                .setPostFilter(filter)
-                .setFrom(from).setSize(size).setExplain(true)
-                .get();
-    }
-
-    public GetResponse get(String id, String index, String type) {
-        return client.prepareGet(index, type, id).get();
-    }
-
-    public IndexResponse set(String id, String index, String type, XContentBuilder jsonBuilder) {
-        return this.client.prepareIndex(index, type, id)
-                .setSource(jsonBuilder)
-                .get();
+    JestResult del(String id) throws java.io.IOException {
+        return this.client.execute(new Delete.Builder(id).index(this.index).type(this.type).build());
     }
 
     public void stopConnection() {
-        this.client.close();
+        this.client.shutdownClient();
     }
 
 }

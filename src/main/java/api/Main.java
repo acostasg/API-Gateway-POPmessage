@@ -2,6 +2,7 @@ package api;
 
 import api.binder.POPMessageBinder;
 import api.binder.POPMessageTestBinder;
+import org.apache.log4j.BasicConfigurator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -22,6 +23,7 @@ public class Main extends ResourceConfig {
      * @return Grizzly HTTP server.
      */
     public static HttpServer startServer() {
+        BasicConfigurator.configure();
         final ResourceConfig rc = new ResourceConfig().packages("api");
         rc.register(new POPMessageBinder());
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);

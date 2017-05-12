@@ -7,6 +7,8 @@ import api.infrastucture.elasticSearch.ElasticSearchClient;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
+import javax.inject.Singleton;
+
 public class POPMessageBinder extends AbstractBinder {
     @Override
     protected void configure() {
@@ -25,6 +27,6 @@ public class POPMessageBinder extends AbstractBinder {
         bind(ElasticSearchClient.class)
                 .to(ElasticSearchClient.class)
                 .named(ElasticSearchClient.class.getCanonicalName())
-                .in(RequestScoped.class);
+                .in(Singleton.class);
     }
 }

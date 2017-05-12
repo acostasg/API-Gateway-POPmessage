@@ -1,11 +1,7 @@
 package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
-import api.domain.factory.MessageFactory;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
+import io.searchbox.core.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +19,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     @Override
     public List<Message> getMessagesByUser(User user, int limit) {
         startConnection();
-        SearchResponse response = this.elasticSearchClient.
+       /* SearchResponse response = this.elasticSearchClient.
                 prepareSearch(index).
                 setType(type).
                 executeQuery(QueryBuilders.termQuery("user.ID", user.ID().Id()));
@@ -33,11 +29,12 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             return null;
         }
 
-        return builderMessages(response);
+        return builderMessages(response);*/
+        return null;
     }
 
-    private ArrayList<Message> builderMessages(SearchResponse response) {
-        ArrayList<Message> messages = new ArrayList<Message>();
+    private ArrayList<Message> builderMessages(SearchResult response) {
+       /* ArrayList<Message> messages = new ArrayList<Message>();
         while (response.getHits().iterator().hasNext()) {
             SearchHit searchHit = response.getHits().iterator().next();
             messages.add(
@@ -57,7 +54,8 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                     )
             );
         }
-        return messages;
+        return messages;*/
+        return null;
     }
 
     @Override
@@ -68,7 +66,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     @Override
     public List<Message> getMessagesByLocation(Location location, int limit) {
         startConnection();
-        SearchResponse response = this.elasticSearchClient.
+        /*SearchResponse response = this.elasticSearchClient.
                 prepareSearch(index).
                 setType(type).
                 executeQuery(
@@ -83,13 +81,14 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             return null;
         }
 
-        return builderMessages(response);
+        return builderMessages(response);*/
+        return null;
     }
 
     @Override
     public Message getMessage(Id messageId) {
         startConnection();
-        GetResponse response = this.elasticSearchClient.get(
+       /* GetResponse response = this.elasticSearchClient.get(
                 messageId.Id(),
                 index,
                 type
@@ -113,7 +112,8 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                 ),
                 new ArrayList<Vote>(),
                 Status.ACTIVE
-        );
+        );*/
+        return null;
     }
 
     @Override

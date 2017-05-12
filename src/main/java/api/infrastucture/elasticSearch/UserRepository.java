@@ -4,21 +4,16 @@ import api.domain.entity.Id;
 import api.domain.entity.Status;
 import api.domain.entity.Token;
 import api.domain.entity.User;
-import api.domain.factory.MessageFactory;
 import api.domain.factory.UserFactory;
-import org.elasticsearch.action.get.GetResponse;
-import org.elasticsearch.action.index.IndexResponse;
-import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.common.xcontent.XContentBuilder;
-import org.elasticsearch.common.xcontent.XContentFactory;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.search.SearchHit;
+import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
+import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
+import com.google.gson.JsonObject;
+import io.searchbox.client.JestResult;
+import io.searchbox.core.DocumentResult;
+import io.searchbox.core.SearchResult;
+import org.glassfish.hk2.utilities.reflection.Logger;
+import org.json.simple.JSONObject;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
 import java.util.UUID;
 
 public class UserRepository extends AbstractElasticSearchRepository implements api.domain.infrastructure.UserRepository {
@@ -33,12 +28,13 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     @Override
     public User registerUser(String name, String dateOfBirth, String userName, String password) {
         try {
+
             startConnection();
 
             UUID uuid = UUID.randomUUID();
 
             User user = UserFactory.build(
-                    new Id( uuid.toString()),
+                    new Id(uuid.toString()),
                     name,
                     userName,
                     password, //TODO encrypted to secret key
@@ -46,86 +42,116 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     getDateFromString(dateOfBirth)
             );
 
+            JSONObject obj = new JSONObject();
+            obj.put("ID", user.ID().Id());
+            obj.put("name", user.Name());
+            obj.put("userLogin", user.UserLogin());
+            obj.put("password", user.Password());
+            obj.put("status", user.Status().toString());
+            obj.put("crateAt", getDateFromDate(user.Date()));
 
-            XContentBuilder builder = XContentFactory.jsonBuilder()
-                    .startObject()
-                    .field("ID", user.ID().Id())
-                    .field("name", user.Name())
-                    .field("userLogin", user.UserLogin())
-                    .field("password", user.Password())
-                    .field("status", user.Status())
-                    .field("crateAt", user.Date())
-                    .endObject();
+            DocumentResult documentResult = this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .set(obj.toJSONString(), user.ID().Id());
 
-            IndexResponse response = this.elasticSearchClient.set(
-                    uuid.toString(),
-                    index,
-                    type,
-                    builder
-            );
+            stopConnection();
 
-            System.out.println(response.toString());
+            if (documentResult.isSucceeded()) {
+                return user;
+            }
 
-            return user;
-        } catch (java.io.IOException exception){
-            return null;
+        } catch (java.io.IOException exception) {
+            exception.printStackTrace();
         }
-
-    }
-
-    private Date getDateFromString(String dateOfBirth) {
-        DateFormat format = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
-        Date date;
-        try {
-            date = format.parse(dateOfBirth);
-        } catch (ParseException e) {
-           date = new Date();
-        }
-        return date;
-    }
-
-    @Override
-    public User loginUser(String userName, String password) {
         return null;
     }
 
     @Override
+    public User loginUser(String userName, String password) {
+        try {
+
+            startConnection();
+
+            SearchResult response = this.elasticSearchClient.
+                    prepareSearch(index).
+                    setType(type).
+                    executeQuery(
+                            LoginUserDSL.get(userName, password)
+                    );
+
+
+            if (!response.isSucceeded() || response.getTotal() <= 0) {
+                stopConnection();
+                return null;
+            }
+
+            SearchResult.Hit<JSONObject, Void> user = response.getFirstHit(JSONObject.class);
+            stopConnection();
+            return UserFactory.build(
+                    new Id(user.id),
+                    user.source.get("name").toString(),
+                    user.source.get("userLogin").toString(),
+                    user.source.get("password").toString(),
+                    Status.valueOf(user.source.get("status").toString()),
+                    getDateFromString(user.source.get("crateAt").toString())
+            );
+        } catch (Exception e) {
+            Logger.printThrowable(e);
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+
+    @Override
     public User getUserByToken(Token token) {
+        try {
+            startConnection();
 
-        startConnection();
+            SearchResult response = this.elasticSearchClient.
+                    prepareSearch(index_token).
+                    setType(type_toke).
+                    executeQuery(
+                            UserByTokenDSL.get(token)
+                    );
 
-        SearchResponse response = this.elasticSearchClient.
-                prepareSearch(index_token).
-                setType(type_toke).
-                executeQuery(
-                        QueryBuilders.termQuery("token", token.hash())
-                );
+            if (response.isSucceeded() || response.getTotal() <= 0) {
+                return null;
+            }
 
-        if (response == null || response.getHits().totalHits() <= 0) {
-            return null;
+            SearchResult.Hit<JSONObject, Void> tokenJson = response.getFirstHit(JSONObject.class);
+
+            JestResult responseUser = this.elasticSearchClient.get(
+                    tokenJson.source.get("userId").toString()
+            );
+
+            if (responseUser.isSucceeded()) {
+                return null;
+            }
+
+            JsonObject userJson = responseUser.getJsonObject();
+            stopConnection();
+            return UserFactory.build(
+                    new Id(userJson.get("ID").toString()),
+                    userJson.get("name").toString(),
+                    userJson.get("userLogin").toString(),
+                    userJson.get("password").toString(),
+                    Status.valueOf(userJson.get("status").toString()),
+                    getDateFromString(userJson.get("crateAt").toString())
+            );
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
 
-        SearchHit searchHit = response.getHits().getAt(0);
+        return null;
+    }
 
-        GetResponse responseUser = this.elasticSearchClient.get(
-                searchHit.field("userId").getValue().toString(),
-                index,
-                type
-        );
-
+    @Override
+    protected void finalize() throws Throwable {
         stopConnection();
-
-        if (responseUser == null || responseUser.isSourceEmpty()) {
-            return null;
-        }
-
-        return new User(
-                new Id(responseUser.getId()),
-                responseUser.getField("name").getValue().toString(),
-                responseUser.getField("userLogin").getValue().toString(),
-                responseUser.getField("password").getValue().toString(),
-                Status.ACTIVE,
-                new Date(responseUser.getField("crateAt").getValue().toString())
-        );
+        super.finalize();
     }
 }

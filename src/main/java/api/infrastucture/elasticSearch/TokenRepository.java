@@ -2,18 +2,21 @@ package api.infrastucture.elasticSearch;
 
 import api.domain.entity.Token;
 import api.domain.entity.User;
+import api.domain.infrastructure.UserRepository;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import org.elasticsearch.common.xcontent.XContentBuilder;
+import io.searchbox.core.DocumentResult;
+import org.json.simple.JSONObject;
 
+import javax.inject.Inject;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import static org.elasticsearch.common.xcontent.XContentFactory.jsonBuilder;
 
 public class TokenRepository extends AbstractElasticSearchRepository implements api.domain.infrastructure.TokenRepository {
 
@@ -22,6 +25,9 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
 
     private static final String secret = "G2fBYWd9W43z63IaAro9J9QWOi2t03zw";
     private static final String autO = "k9i4E1t8tI";
+
+    @Inject
+    private UserRepository userRepository;
 
     @Override
     public Token generateToken(User user) {
@@ -37,40 +43,43 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
                     tokenString
             );
 
-            try {
-                XContentBuilder xContentBuilder = jsonBuilder()
-                        .startObject()
-                        .field("token", tokenString)
-                        .field("crateAt", new Date())
-                        .field("userId", user.ID().Id())
-                        .endObject();
 
-                startConnection();
-                this.elasticSearchClient.set(token.hash(), index, type, xContentBuilder);
-                stopConnection();
+            JSONObject obj = new JSONObject();
+            obj.put("hash", token.hash());
+            obj.put("userId", user.ID().Id());
+            obj.put("crateAt", getDateFromDate(new Date()));
 
-            } catch (java.io.IOException exception) {
-                return null;
+
+            startConnection();
+            DocumentResult documentResult = this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .set(obj.toJSONString(), user.ID().Id());
+            stopConnection();
+
+            if (documentResult.isSucceeded()) {
+                return token;
             }
-
-            //TODO save to elasticsearch
-
-            return token;
 
         } catch (UnsupportedEncodingException | JWTCreationException exception) {
             return null;
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     @Override
     public Token validateToken(Token token) {
         try {
 
-            Algorithm algorithm = Algorithm.HMAC256(secret);
-            JWTVerifier verifier = JWT.require(algorithm)
-                    .withIssuer(autO)
-                    .build();
-            DecodedJWT jwt = verifier.verify(token.hash());
+            User user = userRepository.getUserByToken(token);
+
+            DecodedJWT jwt = getDecodedJWT(token);
+
+            if (isValidTokenByUser(user, jwt)) {
+                return null;
+            }
 
             Date date = new Date();
 
@@ -86,8 +95,29 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
         }
     }
 
+    private DecodedJWT getDecodedJWT(Token token) throws UnsupportedEncodingException {
+        Algorithm algorithm = Algorithm.HMAC256(secret);
+        JWTVerifier verifier = JWT.require(algorithm)
+                .withIssuer(autO)
+                .build();
+        return verifier.verify(token.hash());
+    }
+
+    private boolean isValidTokenByUser(User user, DecodedJWT jwt) {
+        return user == null || !user.ID().Id().equals(jwt.getSubject());
+    }
+
     @Override
     public void deleteToken(User user, Token token) {
-        //TODO delete elasticsearch
+        try {
+            startConnection();
+            this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .del(user.ID().Id());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        stopConnection();
     }
 }

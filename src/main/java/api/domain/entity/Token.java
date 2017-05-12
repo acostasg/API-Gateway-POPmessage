@@ -4,8 +4,18 @@ public class Token {
 
     private String hash;
 
+    private String userId;
+
+    private String crateAt;
+
     public Token(String hash) {
         this.hash = hash;
+    }
+
+    public Token(String hash, String userId, String crateAt) {
+        this.hash = hash;
+        this.userId = userId;
+        this.crateAt = crateAt;
     }
 
     public String hash() {
@@ -18,6 +28,19 @@ public class Token {
 
     public boolean isHashEqual(String $hash) {
         return this.hash.equals($hash);
+    }
+
+
+    public String Hash() {
+        return hash;
+    }
+
+    public String UserId() {
+        return userId;
+    }
+
+    public String CrateAt() {
+        return crateAt;
     }
 
     @Override
