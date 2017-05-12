@@ -39,8 +39,9 @@ public class SessionAPI {
                 )
         );
 
-        if (null == tokenValid || tokenValid.isEmpty())
+        if (null == tokenValid || tokenValid.isEmpty()) {
             return Response.status(Response.Status.BAD_REQUEST).build();
+        }
 
         return Response.ok(tokenValid.toString(), MediaType.APPLICATION_JSON).build();
     }

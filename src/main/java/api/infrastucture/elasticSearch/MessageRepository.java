@@ -1,13 +1,16 @@
 package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
+import api.domain.factory.MessageFactory;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
+import io.searchbox.core.DocumentResult;
 import io.searchbox.core.SearchResult;
 import org.glassfish.hk2.utilities.reflection.Logger;
 import org.json.simple.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class MessageRepository extends AbstractElasticSearchRepository implements api.domain.infrastructure.MessageRepository {
 
@@ -141,6 +144,45 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public Message crateMessage(String text, User user, Location location) {
+
+        try {
+
+            startConnection();
+
+            UUID uuid = UUID.randomUUID();
+
+            Message message = MessageFactory.build(
+                    new Id(uuid.toString()),
+                    user,
+                    text,
+                    location,
+                    Status.ACTIVE
+            );
+
+            JSONObject obj = new JSONObject();
+            obj.put("ID", message.ID().Id());
+            obj.put("user.ID", message.user().ID().Id());
+            obj.put("user.name", message.user().Name());
+            obj.put("ID", message.ID().Id());
+            obj.put("text", message.Text());
+            JSONObject locationJson = new JSONObject();
+            locationJson.put("lat", Float.parseFloat(message.Location().Lat()));
+            locationJson.put("lon", Float.parseFloat(message.Location().Lon()));
+            obj.put("location", locationJson);
+            obj.put("status", user.Status().toString());
+
+            DocumentResult documentResult = this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .set(obj.toJSONString(), message.ID().Id());
+
+            if (documentResult.isSucceeded()) {
+                return message;
+            }
+
+        } catch (java.io.IOException exception) {
+            exception.printStackTrace();
+        }
         return null;
     }
 

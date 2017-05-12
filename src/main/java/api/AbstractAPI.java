@@ -2,7 +2,6 @@ package api;
 
 import api.domain.command.CommandGetMessagesByUser;
 import api.domain.command.CommandGetUserByToken;
-import api.domain.command.CommandValidateToken;
 import api.domain.command.CommandVoteMessage;
 import api.domain.command.request.GetMessagesByUserRequest;
 import api.domain.command.request.GetUserByTokenRequest;
@@ -14,7 +13,7 @@ import api.domain.entity.User;
 import api.domain.exceptions.InvalidUser;
 import api.domain.infrastructure.MessageRepository;
 import api.domain.infrastructure.TokenRepository;
-import api.infrastucture.inMemory.UserRepository;
+import api.domain.infrastructure.UserRepository;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,13 +24,12 @@ abstract class AbstractAPI {
     protected MessageRepository messageRepository;
     @Inject
     protected TokenRepository tokenRepository;
+    @Inject
+    protected UserRepository userRepository;
 
     User getUserByToken(String token) {
         CommandGetUserByToken userCaseGetUserByToken = new CommandGetUserByToken(
-                new UserRepository(),
-                new CommandValidateToken(
-                        this.tokenRepository
-                )
+                this.userRepository
         );
 
         return userCaseGetUserByToken.execute(

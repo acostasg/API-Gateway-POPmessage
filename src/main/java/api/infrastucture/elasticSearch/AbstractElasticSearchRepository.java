@@ -14,7 +14,7 @@ public class AbstractElasticSearchRepository {
     ElasticSearchClient elasticSearchClient;
 
     protected void stopConnection() {
-        this.elasticSearchClient.stopConnection();
+        //this.elasticSearchClient.stopConnection();
     }
 
     protected void startConnection() {

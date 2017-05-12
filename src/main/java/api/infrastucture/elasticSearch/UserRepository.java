@@ -135,7 +135,6 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
             }
 
             JSONObject userJson = responseUser.getSourceAsObject(JSONObject.class);
-            stopConnection();
             return UserFactory.build(
                     new Id(userJson.get("ID").toString()),
                     userJson.get("name").toString(),

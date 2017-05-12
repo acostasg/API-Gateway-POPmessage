@@ -78,7 +78,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
 
             DecodedJWT jwt = getDecodedJWT(token);
 
-            if (isValidTokenByUser(user, jwt)) {
+            if (!isValidTokenByUser(user, jwt)) {
                 return null;
             }
 
@@ -105,7 +105,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     }
 
     private boolean isValidTokenByUser(User user, DecodedJWT jwt) {
-        return user != null || !user.ID().Id().equals(jwt.getSubject());
+        return user != null || user.ID().Id().equals(jwt.getSubject());
     }
 
     @Override

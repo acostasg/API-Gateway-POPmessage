@@ -26,16 +26,17 @@ public class ElasticSearchClient {
 
     void startConnection() {
         try {
-            JestClientFactory factory = new JestClientFactory();
-            factory.setHttpClientConfig(new HttpClientConfig
-                    .Builder(HOST)
-                    .defaultMaxTotalConnectionPerRoute(2)
-                    .maxTotalConnection(20)
-                    .discoveryEnabled(true)
-                    .multiThreaded(true)
-                    .build()
-            );
-            this.client = factory.getObject();
+            if (null == this.client) {
+                JestClientFactory factory = new JestClientFactory();
+                factory.setHttpClientConfig(new HttpClientConfig
+                        .Builder(HOST)
+                        .defaultMaxTotalConnectionPerRoute(5)
+                        .maxTotalConnection(30)
+                        .multiThreaded(false)
+                        .build()
+                );
+                this.client = factory.getObject();
+            }
         } catch (Exception exception) {
             exception.printStackTrace();
         }
