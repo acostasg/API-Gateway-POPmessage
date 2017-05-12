@@ -8,7 +8,6 @@ import api.domain.factory.UserFactory;
 import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
-import com.google.gson.JsonObject;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.SearchResult;
@@ -128,8 +127,8 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     .prepareSearch(index)
                     .setType(type)
                     .get(
-                    tokenJson.source.get("userId").toString()
-            );
+                            tokenJson.source.get("userId").toString()
+                    );
 
             if (!responseUser.isSucceeded()) {
                 return null;

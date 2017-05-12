@@ -11,7 +11,6 @@ import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import io.searchbox.core.DocumentResult;
-import org.glassfish.jersey.internal.util.Base64;
 import org.json.simple.JSONObject;
 
 import javax.inject.Inject;

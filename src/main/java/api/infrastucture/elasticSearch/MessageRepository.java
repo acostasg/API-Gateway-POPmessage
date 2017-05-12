@@ -1,8 +1,6 @@
 package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
-import api.domain.factory.UserFactory;
-import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
 import io.searchbox.core.SearchResult;
 import org.glassfish.hk2.utilities.reflection.Logger;

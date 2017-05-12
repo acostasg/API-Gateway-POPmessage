@@ -6,7 +6,7 @@ public class MessageByUserDSL {
     public static String get(User user) {
         return "{\n" +
                 "    \"query\": {\n" +
-                "            \"match\": { \"user.Id\": \""+user.ID().Id()+"\"}\n" +
+                "            \"match\": { \"user.Id\": \"" + user.ID().Id() + "\"}\n" +
                 "    }\n" +
                 "}";
     }
