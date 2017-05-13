@@ -10,6 +10,7 @@ import api.domain.entity.Message;
 import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
+import api.domain.exceptions.UserInUse;
 import api.domain.infrastructure.UserRepository;
 import api.domain.service.ValidationAppService;
 
@@ -105,15 +106,20 @@ public class UserAPI extends AbstractAPI {
                 this.userRepository
         );
 
-        User user = userCase.execute(
-                new RegisterUserRequest(
-                        name,
-                        dateOfBirth,
-                        userName,
-                        password,
-                        privacyPolicy
-                )
-        );
+        User user = null;
+        try {
+            user = userCase.execute(
+                    new RegisterUserRequest(
+                            name,
+                            dateOfBirth,
+                            userName,
+                            password,
+                            privacyPolicy
+                    )
+            );
+        } catch (UserInUse userInUse) {
+            return Response.status(Response.Status.CONFLICT).build();
+        }
 
         if (null == user)
             return Response.status(Response.Status.BAD_REQUEST).build();

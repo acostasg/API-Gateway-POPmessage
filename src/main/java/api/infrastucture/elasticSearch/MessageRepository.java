@@ -31,7 +31,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
         return this.getMessagesByQueryDSl(queryDSL);
     }
 
-    private List<Message> getMessagesByQueryDSl(String queryDSL){
+    private List<Message> getMessagesByQueryDSl(String queryDSL) {
         try {
 
             startConnection();

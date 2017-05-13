@@ -6,8 +6,8 @@ public class MessageByUserDSL {
     /**
      * Query string for search message for user
      *
-     * @param user User
-     * @param from int
+     * @param user  User
+     * @param from  int
      * @param limit int
      * @return String
      */

@@ -4,9 +4,11 @@ import api.domain.entity.Id;
 import api.domain.entity.Status;
 import api.domain.entity.Token;
 import api.domain.entity.User;
+import api.domain.exceptions.UserInUse;
 import api.domain.factory.UserFactory;
 import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
+import api.infrastucture.elasticSearch.queryDSL.UserByEmailDSL;
 import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
@@ -26,7 +28,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
 
     @Override
-    public User registerUser(String name, String dateOfBirth, String userName, String password) {
+    public User registerUser(String name, String dateOfBirth, String userName, String password) throws UserInUse {
         try {
 
             startConnection();
@@ -42,6 +44,18 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     getDateFromString(dateOfBirth)
             );
 
+            SearchResult responseUser = this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .executeQuery(UserByEmailDSL.get(user));
+
+            if (!responseUser.isSucceeded() || responseUser.getTotal() > 0) {
+                throw new UserInUse(
+                        "User Login is use for other user"
+                );
+            }
+
+
             JSONObject obj = new JSONObject();
             obj.put("ID", user.ID().Id());
             obj.put("name", user.Name());
@@ -55,7 +69,6 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     .setType(type)
                     .set(obj.toJSONString(), user.ID().Id());
 
-            stopConnection();
 
             if (documentResult.isSucceeded()) {
                 return user;
@@ -82,12 +95,11 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
 
             if (!response.isSucceeded() || response.getTotal() <= 0) {
-                stopConnection();
                 return null;
             }
 
             SearchResult.Hit<JSONObject, Void> user = response.getFirstHit(JSONObject.class);
-            stopConnection();
+
             return UserFactory.build(
                     new Id(user.id),
                     user.source.get("name").toString(),
@@ -151,9 +163,4 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
         return null;
     }
 
-    @Override
-    protected void finalize() throws Throwable {
-        stopConnection();
-        super.finalize();
-    }
 }

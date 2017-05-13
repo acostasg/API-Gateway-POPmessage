@@ -24,10 +24,10 @@ public class MessageByLocationUserDSL {
                 "            },\n" +
                 "            \"filter\" : {\n" +
                 "                \"geo_distance\" : {\n" +
-                "                    \"distance\" : \""+distance+"km\",\n" +
+                "                    \"distance\" : \"" + distance + "km\",\n" +
                 "                    \"location\" : {\n" +
                 "                        \"lat\" : " + location.Lat() + ",\n" +
-                "                        \"lon\" : " + location.Lat() + "\n" +
+                "                        \"lon\" : " + location.Lon() + "\n" +
                 "                    }\n" +
                 "                }\n" +
                 "            }\n" +

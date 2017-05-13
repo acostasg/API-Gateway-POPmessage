@@ -47,5 +47,10 @@ public class AbstractElasticSearchRepository {
         return sdf.format(dateOfBirth);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        stopConnection();
+        super.finalize();
+    }
 
 }
