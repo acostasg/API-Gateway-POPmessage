@@ -24,4 +24,18 @@ public class UserFactory {
                 date
         );
     }
+
+    public static User buildByMessage(
+            Id ID,
+            String name
+    ) {
+        return new User(
+                ID,
+                name,
+                null,
+                null,
+                null,
+                null
+        );
+    }
 }

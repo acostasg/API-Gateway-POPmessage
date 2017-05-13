@@ -2,12 +2,16 @@ package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
 import api.domain.factory.MessageFactory;
+import api.domain.factory.UserFactory;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
+import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
+import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.SearchResult;
 import org.glassfish.hk2.utilities.reflection.Logger;
 import org.json.simple.JSONObject;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -41,16 +45,8 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                 return null;
             }
 
-            SearchResult.Hit<JSONObject, Void> messages = response.getFirstHit(JSONObject.class);
-            stopConnection();
-            /*return Mess.build(
-                    new Id(user.id),
-                    user.source.get("name").toString(),
-                    user.source.get("userLogin").toString(),
-                    user.source.get("password").toString(),
-                    Status.valueOf(user.source.get("status").toString()),
-                    getDateFromString(user.source.get("crateAt").toString())
-            );*/
+            List<SearchResult.Hit<JSONObject, Void>> messages = response.getHits(JSONObject.class);
+            return builderMessages(messages);
         } catch (Exception e) {
             Logger.printThrowable(e);
             e.printStackTrace();
@@ -59,28 +55,11 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
         return null;
     }
 
-    private ArrayList<Message> builderMessages(SearchResult response) {
-       /* ArrayList<Message> messages = new ArrayList<Message>();
-        while (response.getHits().iterator().hasNext()) {
-            SearchHit searchHit = response.getHits().iterator().next();
-            messages.add(
-                    MessageFactory.buildMessage(
-                            new Id(searchHit.getId()),
-                            new User(
-                                    new Id(searchHit.field("user.ID").toString()),
-                                    searchHit.field("user.name").toString()
-                            ),
-                            searchHit.field("text").toString(),
-                            new Location(
-                                    searchHit.field("location.lat").getValue().toString(),
-                                    searchHit.field("location.lon").getValue().toString()
-                            ),
-                            new ArrayList<Vote>(),
-                            Status.ACTIVE
-                    )
-            );
+    private ArrayList<Message> builderMessages(List<SearchResult.Hit<JSONObject, Void>> messages) {
+        ArrayList<Message> result = new ArrayList<>();
+        for (SearchResult.Hit<JSONObject, Void> message: messages) {
+            result.add(this.BuilderMessage(message.source));
         }
-        return messages;*/
         return null;
     }
 
@@ -113,33 +92,46 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public Message getMessage(Id messageId) {
-        startConnection();
-       /* GetResponse response = this.elasticSearchClient.get(
-                messageId.Id(),
-                index,
-                type
-        );
-        stopConnection();
+        try {
+            startConnection();
 
-        if (response.isSourceEmpty()) {
-            return null;
+            JestResult messageResponse = this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .get(
+                            messageId.Id()
+                    );
+
+            if (!messageResponse.isSucceeded()) {
+                return null;
+            }
+
+            JSONObject userJson = messageResponse.getSourceAsObject(JSONObject.class);
+            return BuilderMessage(userJson);
+
+        } catch (java.io.IOException e) {
+            e.printStackTrace();
         }
 
-        return MessageFactory.buildMessage(
-                new Id(response.getId()),
-                new User(
-                        new Id(response.getField("user.ID").toString()),
-                        response.getField("user.name").toString()
-                ),
-                response.getField("text").toString(),
-                new Location(
-                        response.getField("location.lat").getValue().toString(),
-                        response.getField("location.lon").getValue().toString()
-                ),
-                new ArrayList<Vote>(),
-                Status.ACTIVE
-        );*/
         return null;
+    }
+
+    private Message BuilderMessage(JSONObject userJson) {
+        return MessageFactory.buildMessage(
+                new Id(userJson.get("ID").toString()),
+                UserFactory.buildByMessage(
+                        new Id(userJson.get("user.ID").toString()),
+                        userJson.get("user.name").toString()
+                ),
+                userJson.get("text").toString(),
+                new Location(
+                        userJson.get("location.lat").toString(), //TODO ???
+                        userJson.get("location.lon").toString()
+                ),
+                new ArrayList<Vote>(), //TODO add votes
+                Status.valueOf(userJson.get("status").toString())
+
+        );
     }
 
     @Override
