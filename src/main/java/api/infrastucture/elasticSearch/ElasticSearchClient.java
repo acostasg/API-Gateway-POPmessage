@@ -21,10 +21,11 @@ public class ElasticSearchClient {
     @Inject
     @Singleton
     public ElasticSearchClient() {
+        startConnection();
     }
 
 
-    void startConnection() {
+    private void startConnection() {
         try {
             if (null == this.client) {
                 JestClientFactory factory = new JestClientFactory();
@@ -64,7 +65,6 @@ public class ElasticSearchClient {
 
 
     JestResult get(String id) throws java.io.IOException {
-
         Get get = new Get.Builder(this.index, id).type(this.type).build();
 
         return client.execute(get);
@@ -73,6 +73,10 @@ public class ElasticSearchClient {
     DocumentResult set(String jsonBuilder, String id) throws java.io.IOException {
         Index index = new Index.Builder(jsonBuilder).id(id).index(this.index).type(this.type).build();
         return client.execute(index);
+    }
+
+    DocumentResult put(String jsonBuilder, String id) throws java.io.IOException {
+        return client.execute(new Update.Builder(jsonBuilder).index(this.index).type(this.type).id(id).build());
     }
 
     JestResult del(String id) throws java.io.IOException {

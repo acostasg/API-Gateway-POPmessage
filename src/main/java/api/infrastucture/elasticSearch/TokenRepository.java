@@ -50,13 +50,10 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
             obj.put("userId", user.ID().Id());
             obj.put("crateAt", getDateFromDate(new Date()));
 
-
-            startConnection();
             DocumentResult documentResult = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
                     .set(obj.toJSONString(), user.ID().Id());
-            stopConnection();
 
             if (documentResult.isSucceeded()) {
                 return token;
@@ -111,7 +108,6 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     @Override
     public void deleteToken(User user, Token token) {
         try {
-            startConnection();
             this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
@@ -119,6 +115,5 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
         } catch (IOException e) {
             e.printStackTrace();
         }
-        stopConnection();
     }
 }

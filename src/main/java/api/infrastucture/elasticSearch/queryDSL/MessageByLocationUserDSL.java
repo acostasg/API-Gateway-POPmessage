@@ -15,7 +15,7 @@ public class MessageByLocationUserDSL {
      * @param limit    int
      * @return String
      */
-    public static String get(Location location, int from, int limit) {
+    public static String get(Location location, int from, int limit) { //TODO order by votes and date
         return "{\n" +
                 "\"from\" : " + from + ", \"size\" : " + limit + "," +
                 "    \"query\": {\n" +

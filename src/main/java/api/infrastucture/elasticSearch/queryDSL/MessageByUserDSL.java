@@ -11,7 +11,7 @@ public class MessageByUserDSL {
      * @param limit int
      * @return String
      */
-    public static String get(User user, int from, int limit) {
+    public static String get(User user, int from, int limit) { //TODO order by date
         return "{\n" +
                 "\"from\" : " + from + ", \"size\" : " + limit + "," + MessageByUserDSL.sort() +
                 query(user) +

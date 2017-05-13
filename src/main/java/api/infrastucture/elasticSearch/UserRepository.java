@@ -33,8 +33,6 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     public User registerUser(String name, String dateOfBirth, String userName, String password) throws UserInUse {
         try {
 
-            startConnection();
-
             UUID uuid = UUID.randomUUID();
 
             User user = UserFactory.build(
@@ -79,9 +77,6 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     @Override
     public User loginUser(String userName, String password) {
         try {
-
-            startConnection();
-
             SearchResult response = this.elasticSearchClient.
                     prepareSearch(index).
                     setType(type).
@@ -112,8 +107,6 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     @Override
     public User getUserByToken(Token token) {
         try {
-            startConnection();
-
             SearchResult response = this.elasticSearchClient.
                     prepareSearch(index_token).
                     setType(type_toke).

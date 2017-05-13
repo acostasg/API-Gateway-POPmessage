@@ -2,6 +2,7 @@ package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
 import api.domain.factory.MessageFactory;
+import api.domain.factory.VoteFactory;
 import api.infrastucture.elasticSearch.queryDSL.MessageByLocationUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.mappers.MessageMapper;
@@ -34,9 +35,6 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     private List<Message> getMessagesByQueryDSl(String queryDSL) {
         try {
-
-            startConnection();
-
             SearchResult response = this.elasticSearchClient.
                     prepareSearch(index).
                     setType(type).
@@ -46,7 +44,6 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
 
             if (!response.isSucceeded()) {
-                stopConnection();
                 return null;
             }
 
@@ -74,8 +71,6 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     @Override
     public Message getMessage(Id messageId) {
         try {
-            startConnection();
-
             JestResult messageResponse = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
@@ -101,8 +96,6 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     public Message crateMessage(String text, User user, Location location) {
 
         try {
-
-            startConnection();
 
             UUID uuid = UUID.randomUUID();
 
@@ -132,7 +125,6 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     @Override
     public Message deleteMessage(User user, Message message) {
         message.Delete();
-
         try {
             this.elasticSearchClient
                     .prepareSearch(index)
@@ -147,9 +139,24 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     }
 
     @Override
-    public Message addVoteToMessage(User user, Message message, Type status) {
+    public Message addVoteToMessage(User user, Message message, Type typeMessage) {
+        message.addVote(
+                VoteFactory.build(
+                        user.ID(),
+                        message.ID(),
+                        typeMessage
+                )
+        );
 
+        try {
+            this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .put(this.messageMapper.encodeMessageVote(message), message.ID().Id());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        return null;
+        return message;
     }
 }

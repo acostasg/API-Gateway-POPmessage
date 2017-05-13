@@ -14,11 +14,7 @@ public class AbstractElasticSearchRepository {
     ElasticSearchClient elasticSearchClient;
 
     protected void stopConnection() {
-        //this.elasticSearchClient.stopConnection();
-    }
-
-    protected void startConnection() {
-        this.elasticSearchClient.startConnection();
+        this.elasticSearchClient.stopConnection();
     }
 
     protected Date getDateExpiration() {
