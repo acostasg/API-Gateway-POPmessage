@@ -2,17 +2,15 @@ package api.infrastucture.elasticSearch;
 
 import api.domain.entity.*;
 import api.domain.factory.MessageFactory;
-import api.domain.factory.UserFactory;
+import api.infrastucture.elasticSearch.queryDSL.MessageByLocationUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
-import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
+import api.infrastucture.elasticSearch.queryDSL.mappers.MessageMapper;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.SearchResult;
 import org.glassfish.hk2.utilities.reflection.Logger;
 import org.json.simple.JSONObject;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -20,6 +18,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     private static final String index = "message_index";
     private static final String type = "message";
+    private final MessageMapper messageMapper = new MessageMapper();
 
     @Override
     public List<Message> getMessagesByUser(User user) {
@@ -28,6 +27,11 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public List<Message> getMessagesByUser(User user, int limit) {
+        String queryDSL = MessageByUserDSL.get(user, 0, limit);
+        return this.getMessagesByQueryDSl(queryDSL);
+    }
+
+    private List<Message> getMessagesByQueryDSl(String queryDSL){
         try {
 
             startConnection();
@@ -36,32 +40,24 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                     prepareSearch(index).
                     setType(type).
                     executeQuery(
-                            MessageByUserDSL.get(user)
+                            queryDSL
                     );
 
 
-            if (!response.isSucceeded() || response.getTotal() <= 0) {
+            if (!response.isSucceeded()) {
                 stopConnection();
                 return null;
             }
 
             List<SearchResult.Hit<JSONObject, Void>> messages = response.getHits(JSONObject.class);
-            return builderMessages(messages);
+            return this.messageMapper.builderMessages(messages);
         } catch (Exception e) {
             Logger.printThrowable(e);
             e.printStackTrace();
         }
-
         return null;
     }
 
-    private ArrayList<Message> builderMessages(List<SearchResult.Hit<JSONObject, Void>> messages) {
-        ArrayList<Message> result = new ArrayList<>();
-        for (SearchResult.Hit<JSONObject, Void> message: messages) {
-            result.add(this.BuilderMessage(message.source));
-        }
-        return null;
-    }
 
     @Override
     public List<Message> getMessagesByLocation(Location location) {
@@ -70,24 +66,8 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public List<Message> getMessagesByLocation(Location location, int limit) {
-        startConnection();
-        /*SearchResponse response = this.elasticSearchClient.
-                prepareSearch(index).
-                setType(type).
-                executeQuery(
-                        QueryBuilders.
-                                boolQuery().
-                                must(QueryBuilders.termQuery("location.lat", location.Lat())).
-                                must(QueryBuilders.termQuery("location.lon", location.Lon()))
-                );
-
-        stopConnection();
-        if (response.getHits().totalHits() <= 0) {
-            return null;
-        }
-
-        return builderMessages(response);*/
-        return null;
+        String queryDSL = MessageByLocationUserDSL.get(location, 0, limit);
+        return this.getMessagesByQueryDSl(queryDSL);
     }
 
     @Override
@@ -107,31 +87,13 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             }
 
             JSONObject userJson = messageResponse.getSourceAsObject(JSONObject.class);
-            return BuilderMessage(userJson);
+            return messageMapper.builderMessage(userJson);
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
         }
 
         return null;
-    }
-
-    private Message BuilderMessage(JSONObject userJson) {
-        return MessageFactory.buildMessage(
-                new Id(userJson.get("ID").toString()),
-                UserFactory.buildByMessage(
-                        new Id(userJson.get("user.ID").toString()),
-                        userJson.get("user.name").toString()
-                ),
-                userJson.get("text").toString(),
-                new Location(
-                        userJson.get("location.lat").toString(), //TODO ???
-                        userJson.get("location.lon").toString()
-                ),
-                new ArrayList<Vote>(), //TODO add votes
-                Status.valueOf(userJson.get("status").toString())
-
-        );
     }
 
     @Override
@@ -151,22 +113,10 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                     Status.ACTIVE
             );
 
-            JSONObject obj = new JSONObject();
-            obj.put("ID", message.ID().Id());
-            obj.put("user.ID", message.user().ID().Id());
-            obj.put("user.name", message.user().Name());
-            obj.put("ID", message.ID().Id());
-            obj.put("text", message.Text());
-            JSONObject locationJson = new JSONObject();
-            locationJson.put("lat", Float.parseFloat(message.Location().Lat()));
-            locationJson.put("lon", Float.parseFloat(message.Location().Lon()));
-            obj.put("location", locationJson);
-            obj.put("status", user.Status().toString());
-
             DocumentResult documentResult = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .set(obj.toJSONString(), message.ID().Id());
+                    .set(this.messageMapper.encodeMessage(message, user), message.ID().Id());
 
             if (documentResult.isSucceeded()) {
                 return message;

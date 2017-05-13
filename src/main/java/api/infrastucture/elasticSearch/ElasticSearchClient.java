@@ -32,7 +32,7 @@ public class ElasticSearchClient {
                         .Builder(HOST)
                         .defaultMaxTotalConnectionPerRoute(5)
                         .maxTotalConnection(30)
-                        .multiThreaded(false)
+                        .multiThreaded(true)
                         .build()
                 );
                 this.client = factory.getObject();
