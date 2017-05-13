@@ -10,6 +10,7 @@ import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.UserByEmailDSL;
 import api.infrastucture.elasticSearch.queryDSL.UserByTokenDSL;
+import api.infrastucture.elasticSearch.queryDSL.mappers.UserMapper;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
 import io.searchbox.core.SearchResult;
@@ -26,6 +27,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     private static final String index_token = "token_index";
     private static final String type_toke = "token";
 
+    private final UserMapper userMapper = new UserMapper();
 
     @Override
     public User registerUser(String name, String dateOfBirth, String userName, String password) throws UserInUse {
@@ -55,19 +57,13 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                 );
             }
 
-
-            JSONObject obj = new JSONObject();
-            obj.put("ID", user.ID().Id());
-            obj.put("name", user.Name());
-            obj.put("userLogin", user.UserLogin());
-            obj.put("password", user.Password());
-            obj.put("status", user.Status().toString());
-            obj.put("crateAt", getDateFromDate(user.Date()));
-
             DocumentResult documentResult = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .set(obj.toJSONString(), user.ID().Id());
+                    .set(
+                            this.userMapper.encoderUser(user, getDateFromDate(user.Date())),
+                            user.ID().Id()
+                    );
 
 
             if (documentResult.isSucceeded()) {
@@ -99,15 +95,11 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
             }
 
             SearchResult.Hit<JSONObject, Void> user = response.getFirstHit(JSONObject.class);
-
-            return UserFactory.build(
-                    new Id(user.id),
-                    user.source.get("name").toString(),
-                    user.source.get("userLogin").toString(),
-                    user.source.get("password").toString(),
-                    Status.valueOf(user.source.get("status").toString()),
+            return this.userMapper.builderUserSearch(
+                    user,
                     getDateFromString(user.source.get("crateAt").toString())
             );
+
         } catch (Exception e) {
             Logger.printThrowable(e);
             e.printStackTrace();
@@ -147,12 +139,8 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
             }
 
             JSONObject userJson = responseUser.getSourceAsObject(JSONObject.class);
-            return UserFactory.build(
-                    new Id(userJson.get("ID").toString()),
-                    userJson.get("name").toString(),
-                    userJson.get("userLogin").toString(),
-                    userJson.get("password").toString(),
-                    Status.valueOf(userJson.get("status").toString()),
+            return this.userMapper.builderUser(
+                    userJson,
                     getDateFromString(userJson.get("crateAt").toString())
             );
 
