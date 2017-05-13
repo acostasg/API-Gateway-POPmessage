@@ -52,7 +52,7 @@ public class MessageMapper {
         locationJson.put("lat", Float.parseFloat(message.Location().Lat()));
         locationJson.put("lon", Float.parseFloat(message.Location().Lon()));
         obj.put("location", locationJson);
-        obj.put("status", user.Status().toString());
+        obj.put("status", message.Status().toString());
         return obj.toJSONString();
     }
 

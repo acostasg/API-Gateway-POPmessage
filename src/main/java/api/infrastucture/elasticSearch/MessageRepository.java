@@ -11,6 +11,7 @@ import io.searchbox.core.SearchResult;
 import org.glassfish.hk2.utilities.reflection.Logger;
 import org.json.simple.JSONObject;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
@@ -130,11 +131,25 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public Message deleteMessage(User user, Message message) {
-        return null;
+        message.Delete();
+
+        try {
+            this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .set(this.messageMapper.encodeMessage(message, user), message.ID().Id());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+
     }
 
     @Override
     public Message addVoteToMessage(User user, Message message, Type status) {
+
+
         return null;
     }
 }

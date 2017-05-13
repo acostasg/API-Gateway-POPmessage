@@ -14,10 +14,19 @@ public class MessageByUserDSL {
     public static String get(User user, int from, int limit) {
         return "{\n" +
                 "\"from\" : " + from + ", \"size\" : " + limit + "," + MessageByUserDSL.sort() +
-                "    \"query\": {\n" +
-                "            \"match\": { \"user.ID\": \"" + user.ID().Id() + "\"}\n" +
-                "    }\n" +
+                query(user) +
                 "}";
+    }
+
+    private static String query(User user) {
+        return "  \"query\": {\n" +
+                "    \"bool\": {\n" +
+                "      \"must\": [\n" +
+                "        { \"match\": { \"user.ID\":  \"" + user.ID().Id() + "\" }},\n" +
+                "        { \"match\": { \"status\": \"ACTIVE\"   }}\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  }";
     }
 
     /**

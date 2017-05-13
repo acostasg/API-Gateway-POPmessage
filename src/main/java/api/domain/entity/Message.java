@@ -51,6 +51,10 @@ public class Message {
         return status;
     }
 
+    public void Delete() {
+        this.status = Status.DELETED;
+    }
+
     @Override
     public String toString() {
         return "{" +

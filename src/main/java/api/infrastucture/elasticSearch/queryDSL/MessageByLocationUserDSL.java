@@ -1,6 +1,7 @@
 package api.infrastucture.elasticSearch.queryDSL;
 
 import api.domain.entity.Location;
+import api.domain.entity.Status;
 
 public class MessageByLocationUserDSL {
 
@@ -19,9 +20,7 @@ public class MessageByLocationUserDSL {
                 "\"from\" : " + from + ", \"size\" : " + limit + "," +
                 "    \"query\": {\n" +
                 "        \"bool\" : {\n" +
-                "            \"must\" : {\n" +
-                "                \"match_all\" : {}\n" +
-                "            },\n" +
+                must() +
                 "            \"filter\" : {\n" +
                 "                \"geo_distance\" : {\n" +
                 "                    \"distance\" : \"" + distance + "km\",\n" +
@@ -34,5 +33,11 @@ public class MessageByLocationUserDSL {
                 "        }\n" +
                 "    }\n" +
                 "}";
+    }
+
+    private static String must() {
+        return "      \"must\": [\n" +
+                "        { \"match\": { \"status\": \"" + Status.ACTIVE + "\"   }}\n" +
+                "      ],\n";
     }
 }
