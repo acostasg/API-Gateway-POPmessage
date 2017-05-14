@@ -55,7 +55,7 @@ public class Message {
         this.status = Status.DELETED;
     }
 
-    public void addVote(Vote vote){
+    public void addVote(Vote vote) {
         this.votes.add(vote);
     }
 

@@ -1,6 +1,9 @@
 package api.infrastucture.elasticSearch.queryDSL.mappers;
 
-import api.domain.entity.*;
+import api.domain.entity.Id;
+import api.domain.entity.Message;
+import api.domain.entity.Status;
+import api.domain.entity.Vote;
 import api.domain.factory.MessageFactory;
 import api.domain.factory.UserFactory;
 import io.searchbox.core.SearchResult;
@@ -47,7 +50,7 @@ public class MessageMapper {
         return result;
     }
 
-    public String encodeMessage(Message message, User user) {
+    public String encodeMessage(Message message) {
         JSONObject obj = new JSONObject();
         obj.put("ID", message.ID().Id());
         obj.put("user.ID", message.user().ID().Id());
@@ -62,22 +65,39 @@ public class MessageMapper {
         return obj.toJSONString();
     }
 
-    public String encodeMessageVote(Message message) {
+    public String encodeMessageVotes(Message message) {
         JSONObject obj = new JSONObject();
 
         JSONArray votes = new JSONArray();
 
-        for (Vote vote: message.Votes()){
+        for (Vote vote : message.Votes()) {
             votes.add(
                     Json.createObjectBuilder()
-                    .add("messageID", vote.MessageID().Id())
-                    .add("userID", vote.UserID().Id())
-                    .add("type", vote.Type().toString()).build()
+                            .add("messageID", vote.MessageID().Id())
+                            .add("userID", vote.UserID().Id())
+                            .add("type", vote.Type().toString()).build()
             );
         }
 
         obj.put("votes", votes.toString());
-        return DOC + obj.toJSONString()+ DOC_END;
+        return DOC + obj.toJSONString() + DOC_END;
+    }
+
+    public String encodeAddVote(Vote vote) {
+        return "{\n" +
+                "   \"script\" : {\n" +
+                "       \"inline\": \"ctx._source.votes.add(params.new_vote)\",\n" +
+                "       \"params\" : {\n" +
+                "          \"new_vote\" :"
+                +
+                Json.createObjectBuilder()
+                        .add("messageID", vote.MessageID().Id())
+                        .add("userID", vote.UserID().Id())
+                        .add("type", vote.Type().toString()).build()
+                +
+                "       }\n" +
+                "   }\n" +
+                "}'";
     }
 
 }

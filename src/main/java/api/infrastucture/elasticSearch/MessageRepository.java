@@ -110,7 +110,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             DocumentResult documentResult = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .set(this.messageMapper.encodeMessage(message, user), message.ID().Id());
+                    .set(this.messageMapper.encodeMessage(message), message.ID().Id());
 
             if (documentResult.isSucceeded()) {
                 return message;
@@ -129,7 +129,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .set(this.messageMapper.encodeMessage(message, user), message.ID().Id());
+                    .set(this.messageMapper.encodeMessage(message), message.ID().Id());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -140,22 +140,27 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public Message addVoteToMessage(User user, Message message, Type typeMessage) {
-        message.addVote(
-                VoteFactory.build(
-                        user.ID(),
-                        message.ID(),
-                        typeMessage
-                )
+        Vote vote = VoteFactory.build(
+                user.ID(),
+                message.ID(),
+                typeMessage
         );
 
         try {
             this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .put(this.messageMapper.encodeMessageVote(message), message.ID().Id());
+                    .put(
+                            this.messageMapper.encodeAddVote(vote),
+                            message.ID().Id()
+                    );
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        message.addVote(
+                vote
+        );
 
         return message;
     }

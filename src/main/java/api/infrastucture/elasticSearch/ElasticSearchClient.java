@@ -83,8 +83,4 @@ public class ElasticSearchClient {
         return this.client.execute(new Delete.Builder(id).index(this.index).type(this.type).build());
     }
 
-    public void stopConnection() {
-        this.client.shutdownClient();
-    }
-
 }

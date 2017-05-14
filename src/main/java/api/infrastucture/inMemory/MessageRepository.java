@@ -76,7 +76,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
                 user.ID(),
                 type
         ));
-        return new Message(
+        return MessageFactory.buildMessage(
                 message.ID(),
                 user,
                 message.Text(),
@@ -101,7 +101,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
     }
 
     private Message getMessageDummy(String id, String userId, String text, Location location) {
-        return new Message(
+        return MessageFactory.buildMessage(
                 new Id(id),
                 new User(new Id(userId), DUMMY_NAME),
                 text,

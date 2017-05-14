@@ -13,10 +13,6 @@ public class AbstractElasticSearchRepository {
     @Inject
     ElasticSearchClient elasticSearchClient;
 
-    protected void stopConnection() {
-        this.elasticSearchClient.stopConnection();
-    }
-
     protected Date getDateExpiration() {
         Date date = new Date();
         Calendar cal = Calendar.getInstance();
@@ -41,12 +37,6 @@ public class AbstractElasticSearchRepository {
         String DATE_FORMAT_NOW = "dd/mm/yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
         return sdf.format(dateOfBirth);
-    }
-
-    @Override
-    protected void finalize() throws Throwable {
-        stopConnection();
-        super.finalize();
     }
 
 }
