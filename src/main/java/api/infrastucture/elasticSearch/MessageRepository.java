@@ -3,6 +3,7 @@ package api.infrastucture.elasticSearch;
 import api.domain.entity.*;
 import api.domain.factory.MessageFactory;
 import api.domain.factory.VoteFactory;
+import api.infrastucture.elasticSearch.queryDSL.AddVoteToMessageDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByLocationUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.mappers.MessageMapper;
@@ -151,7 +152,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                     .prepareSearch(index)
                     .setType(type)
                     .put(
-                            this.messageMapper.encodeAddVote(vote),
+                            AddVoteToMessageDSL.get(vote),
                             message.ID().Id()
                     );
         } catch (IOException e) {

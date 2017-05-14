@@ -16,28 +16,28 @@ public class MessageByLocationUserDSL {
      * @return String
      */
     public static String get(Location location, int from, int limit) { //TODO order by votes and date
-        return "{\n" +
+        return "{" +
                 "\"from\" : " + from + ", \"size\" : " + limit + "," +
-                "    \"query\": {\n" +
-                "        \"bool\" : {\n" +
+                "    \"query\": {" +
+                "        \"bool\" : {" +
                 must() +
-                "            \"filter\" : {\n" +
-                "                \"geo_distance\" : {\n" +
-                "                    \"distance\" : \"" + distance + "km\",\n" +
-                "                    \"location\" : {\n" +
-                "                        \"lat\" : " + location.Lat() + ",\n" +
-                "                        \"lon\" : " + location.Lon() + "\n" +
-                "                    }\n" +
-                "                }\n" +
-                "            }\n" +
-                "        }\n" +
-                "    }\n" +
+                "            \"filter\" : {" +
+                "                \"geo_distance\" : {" +
+                "                    \"distance\" : \"" + distance + "km\"," +
+                "                    \"location\" : {" +
+                "                        \"lat\" : " + location.Lat() + "," +
+                "                        \"lon\" : " + location.Lon() + "" +
+                "                    }" +
+                "                }" +
+                "            }" +
+                "        }" +
+                "    }" +
                 "}";
     }
 
     private static String must() {
-        return "      \"must\": [\n" +
-                "        { \"match\": { \"status\": \"" + Status.ACTIVE + "\"   }}\n" +
-                "      ],\n";
+        return "      \"must\": [" +
+                "        { \"match\": { \"status\": \"" + Status.ACTIVE + "\"   }}" +
+                "      ],";
     }
 }

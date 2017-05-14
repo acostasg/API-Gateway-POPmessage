@@ -83,21 +83,4 @@ public class MessageMapper {
         return DOC + obj.toJSONString() + DOC_END;
     }
 
-    public String encodeAddVote(Vote vote) {
-        return "{\n" +
-                "   \"script\" : {\n" +
-                "       \"inline\": \"ctx._source.votes.add(params.new_vote)\",\n" +
-                "       \"params\" : {\n" +
-                "          \"new_vote\" :"
-                +
-                Json.createObjectBuilder()
-                        .add("messageID", vote.MessageID().Id())
-                        .add("userID", vote.UserID().Id())
-                        .add("type", vote.Type().toString()).build()
-                +
-                "       }\n" +
-                "   }\n" +
-                "}'";
-    }
-
 }

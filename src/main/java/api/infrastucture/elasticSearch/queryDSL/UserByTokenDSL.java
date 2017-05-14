@@ -11,10 +11,10 @@ public class UserByTokenDSL {
      */
     public static String get(Token token) {
 
-        return "{\n" +
-                "  \"query\": {\n" +
-                "    \"match\" : { \"hash\" : \"" + EncodeWrapper.Encoder(token.hash()) + "\" } \n" +
-                "  }\n" +
+        return "{" +
+                "  \"query\": {" +
+                "    \"match\" : { \"hash\" : \"" + EncodeWrapper.Encoder(token.hash()) + "\" }" +
+                "  }" +
                 "}";
     }
 }

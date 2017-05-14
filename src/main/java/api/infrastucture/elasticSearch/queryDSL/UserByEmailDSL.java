@@ -11,10 +11,10 @@ public class UserByEmailDSL {
      */
     public static String get(User user) {
 
-        return "{\n" +
-                "  \"query\": {\n" +
-                "    \"match\" : { \"userLogin\" : \"" + user.UserLogin() + "\" } \n" +
-                "  }\n" +
+        return "{" +
+                "  \"query\": {" +
+                "    \"match\" : { \"userLogin\" : \"" + user.UserLogin() + "\" } " +
+                "  }" +
                 "}";
     }
 }

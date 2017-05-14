@@ -10,15 +10,15 @@ public class LoginUserDSL {
      * @return
      */
     public static String get(String userName, String password) {
-        return "{\n" +
-                "    \"query\": {\n" +
-                "        \"bool\": {\n" +
-                "            \"must\": [\n" +
-                "            { \"match\": { \"userLogin\": \"" + userName + "\"}},\n" +
-                "            { \"match\": { \"password\": \"" + EncodeWrapper.Encoder(password) + "\"}}\n" +
-                "            ]\n" +
-                "        }\n" +
-                "    }\n" +
+        return "{" +
+                "    \"query\": {" +
+                "        \"bool\": {" +
+                "            \"must\": [" +
+                "            { \"match\": { \"userLogin\": \"" + userName + "\"}}," +
+                "            { \"match\": { \"password\": \"" + EncodeWrapper.Encoder(password) + "\"}}" +
+                "            ]" +
+                "        }" +
+                "    }" +
                 "}";
     }
 }

@@ -12,20 +12,20 @@ public class MessageByUserDSL {
      * @return String
      */
     public static String get(User user, int from, int limit) { //TODO order by date
-        return "{\n" +
+        return "{" +
                 "\"from\" : " + from + ", \"size\" : " + limit + "," + MessageByUserDSL.sort() +
                 query(user) +
                 "}";
     }
 
     private static String query(User user) {
-        return "  \"query\": {\n" +
-                "    \"bool\": {\n" +
-                "      \"must\": [\n" +
-                "        { \"match\": { \"user.ID\":  \"" + user.ID().Id() + "\" }},\n" +
-                "        { \"match\": { \"status\": \"ACTIVE\"   }}\n" +
-                "      ]\n" +
-                "    }\n" +
+        return "  \"query\": {" +
+                "    \"bool\": {" +
+                "      \"must\": [" +
+                "        { \"match\": { \"user.ID\":  \"" + user.ID().Id() + "\" }}," +
+                "        { \"match\": { \"status\": \"ACTIVE\"   }}" +
+                "      ]" +
+                "    }" +
                 "  }";
     }
 
