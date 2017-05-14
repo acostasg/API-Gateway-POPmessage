@@ -3,21 +3,17 @@ package api.infrastucture.elasticSearch.queryDSL.mappers;
 import api.domain.entity.Id;
 import api.domain.entity.Message;
 import api.domain.entity.Status;
-import api.domain.entity.Vote;
 import api.domain.factory.MessageFactory;
 import api.domain.factory.UserFactory;
 import io.searchbox.core.SearchResult;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.json.Json;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MessageMapper {
 
-    public static final String DOC = "{\"doc\":";
-    public static final String DOC_END = "}";
+    private final VoteMapper voteMapper = new VoteMapper();
 
     public MessageMapper() {
     }
@@ -32,7 +28,7 @@ public class MessageMapper {
                     ),
                     userJson.get("text").toString(),
                     GeoLocation.decode(userJson.get("location").toString()),
-                    new ArrayList<Vote>(), //TODO add votes
+                    this.voteMapper.builderMessages((ArrayList)userJson.get("votes")),
                     Status.valueOf(userJson.get("status").toString())
 
             );
@@ -63,24 +59,6 @@ public class MessageMapper {
         obj.put("location", locationJson);
         obj.put("status", message.Status().toString());
         return obj.toJSONString();
-    }
-
-    public String encodeMessageVotes(Message message) {
-        JSONObject obj = new JSONObject();
-
-        JSONArray votes = new JSONArray();
-
-        for (Vote vote : message.Votes()) {
-            votes.add(
-                    Json.createObjectBuilder()
-                            .add("messageID", vote.MessageID().Id())
-                            .add("userID", vote.UserID().Id())
-                            .add("type", vote.Type().toString()).build()
-            );
-        }
-
-        obj.put("votes", votes.toString());
-        return DOC + obj.toJSONString() + DOC_END;
     }
 
 }
