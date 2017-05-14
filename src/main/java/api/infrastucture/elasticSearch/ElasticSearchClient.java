@@ -11,7 +11,7 @@ import javax.inject.Singleton;
 
 public class ElasticSearchClient {
 
-    private static final String HOST = "http://0.0.0.0:17560";
+    private static final String HOST = "http://192.168.1.128:17560";
 
     private String index;
     private String type;
