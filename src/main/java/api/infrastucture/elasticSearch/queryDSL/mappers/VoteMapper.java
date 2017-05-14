@@ -20,7 +20,7 @@ public class VoteMapper {
     public VoteMapper() {
     }
 
-    public Vote builderMessage(LinkedTreeMap userJson) {
+    public Vote builderVote(LinkedTreeMap userJson) {
         try {
             return VoteFactory.build(
                     new Id(userJson.get("messageID").toString()),
@@ -34,12 +34,17 @@ public class VoteMapper {
         return null;
     }
 
-    public ArrayList<Vote> builderMessages(ArrayList<LinkedTreeMap> messages) {
+    public ArrayList<Vote> builderVotes(ArrayList<LinkedTreeMap> votesJson) {
         ArrayList<Vote> result = new ArrayList<>();
-        for (LinkedTreeMap message : messages) {
-            Vote vote = this.builderMessage(message);
-            if (null != vote)
-                result.add(this.builderMessage(message));
+        if (null == votesJson)
+            return result;
+
+        for (LinkedTreeMap voteJson : votesJson) {
+            if (null != voteJson) {
+                Vote vote = this.builderVote(voteJson);
+                if (null != vote)
+                    result.add(vote);
+            }
         }
         return result;
     }

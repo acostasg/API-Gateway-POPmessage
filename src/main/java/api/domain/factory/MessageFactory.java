@@ -1,7 +1,6 @@
 package api.domain.factory;
 
 import api.domain.entity.*;
-import api.infrastucture.elasticSearch.queryDSL.mappers.FilterTextWrapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +17,7 @@ public class MessageFactory {
         return new Message(
                 id,
                 user,
-                FilterTextWrapper.Filter(text),
+                text,
                 location,
                 votes,
                 status
@@ -35,7 +34,7 @@ public class MessageFactory {
         return new Message(
                 id,
                 user,
-                FilterTextWrapper.Filter(text),
+                text,
                 location,
                 new ArrayList<Vote>(),
                 status

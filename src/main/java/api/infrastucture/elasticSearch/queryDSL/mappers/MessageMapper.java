@@ -28,7 +28,7 @@ public class MessageMapper {
                     ),
                     userJson.get("text").toString(),
                     GeoLocation.decode(userJson.get("location").toString()),
-                    this.voteMapper.builderMessages((ArrayList)userJson.get("votes")),
+                    this.voteMapper.builderVotes((ArrayList) userJson.get("votes")),
                     Status.valueOf(userJson.get("status").toString())
 
             );

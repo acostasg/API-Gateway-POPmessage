@@ -5,7 +5,6 @@ import api.domain.entity.Vote;
 
 public class AddVoteToMessageDSL {
     /**
-     *
      * @param vote Vote
      * @return
      */

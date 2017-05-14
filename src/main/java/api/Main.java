@@ -3,6 +3,7 @@ package api;
 import api.binder.POPMessageBinder;
 import api.binder.POPMessageTestBinder;
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.PropertyConfigurator;
 import org.glassfish.grizzly.http.server.HttpServer;
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory;
 import org.glassfish.jersey.server.ResourceConfig;
@@ -48,7 +49,11 @@ public class Main extends ResourceConfig {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
+        final String dir = System.getProperty("user.dir");
+        PropertyConfigurator.configure(dir + "/log4j2.properties");
+
         startServer();
+
         System.out.println(String.format("Jersey app started with WADL available at "
                 + "%sapplication.wadl", BASE_URI));
     }
