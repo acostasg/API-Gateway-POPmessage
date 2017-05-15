@@ -8,8 +8,11 @@ import java.util.Date;
 import java.util.Locale;
 
 public class FormatDataService {
+
+    private static final Locale LOCALE = Locale.ENGLISH;
+
     public static String DataFormat(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", LOCALE);
         return dateFormat.format(date);
     }
 
@@ -23,7 +26,7 @@ public class FormatDataService {
     }
 
     public static Date getDateFromString(String dateOfBirth) {
-        DateFormat format = new SimpleDateFormat("dd/mm/yyyy", Locale.ENGLISH);
+        DateFormat format = new SimpleDateFormat("dd/mm/yyyy", LOCALE);
         Date date;
         try {
             date = format.parse(dateOfBirth);
@@ -35,7 +38,7 @@ public class FormatDataService {
 
     public static String getDateFromDate(Date dateOfBirth) {
         String DATE_FORMAT_NOW = "dd/mm/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW);
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW, LOCALE);
         return sdf.format(dateOfBirth);
     }
 }
