@@ -10,11 +10,11 @@ public class Location {
         this.lon = lon;
     }
 
-    public String Lat() {
+    public String lat() {
         return this.lat;
     }
 
-    public String Lon() {
+    public String lon() {
         return this.lon;
     }
 

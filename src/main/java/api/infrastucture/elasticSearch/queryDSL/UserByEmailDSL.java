@@ -13,7 +13,7 @@ public class UserByEmailDSL {
 
         return "{" +
                 "  \"query\": {" +
-                "    \"match\" : { \"userLogin\" : \"" + user.UserLogin() + "\" } " +
+                "    \"match\" : { \"userLogin\" : \"" + user.userLogin() + "\" } " +
                 "  }" +
                 "}";
     }

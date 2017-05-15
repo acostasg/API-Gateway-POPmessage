@@ -68,19 +68,19 @@ public class User {
         return name;
     }
 
-    public String UserLogin() {
+    public String userLogin() {
         return userLogin;
     }
 
-    public String Password() {
+    public String password() {
         return password;
     }
 
-    public Status Status() {
+    public Status status() {
         return status;
     }
 
-    public Date Date() {
+    public Date date() {
         return date;
     }
 

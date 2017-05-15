@@ -12,15 +12,15 @@ public class Vote {
         this.type = type;
     }
 
-    public Id MessageID() {
+    public Id messageID() {
         return messageID;
     }
 
-    public Id UserID() {
+    public Id userID() {
         return userID;
     }
 
-    public Type Type() {
+    public Type type() {
         return type;
     }
 

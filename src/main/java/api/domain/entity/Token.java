@@ -30,16 +30,11 @@ public class Token {
         return this.hash.equals($hash);
     }
 
-
-    public String Hash() {
-        return hash;
-    }
-
-    public String UserId() {
+    public String userId() {
         return userId;
     }
 
-    public String CrateAt() {
+    public String crateAt() {
         return crateAt;
     }
 

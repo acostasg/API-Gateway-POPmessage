@@ -5,6 +5,7 @@ import api.domain.entity.Message;
 import api.domain.entity.Status;
 import api.domain.factory.MessageFactory;
 import api.domain.factory.UserFactory;
+import api.domain.service.FormatDataService;
 import io.searchbox.core.SearchResult;
 import org.json.simple.JSONObject;
 
@@ -29,7 +30,8 @@ public class MessageMapper {
                     userJson.get("text").toString(),
                     GeoLocation.decode(userJson.get("location").toString()),
                     this.voteMapper.builderVotes((ArrayList) userJson.get("votes")),
-                    Status.valueOf(userJson.get("status").toString())
+                    Status.valueOf(userJson.get("status").toString()),
+                    FormatDataService.getDateFromString(userJson.get("createAd").toString())
 
             );
         } catch (Exception e) {
@@ -49,15 +51,17 @@ public class MessageMapper {
     public String encodeMessage(Message message) {
         JSONObject obj = new JSONObject();
         obj.put("ID", message.ID().Id());
-        obj.put("user.ID", message.user().ID().Id());
-        obj.put("user.name", message.user().Name());
+        obj.put("user.ID", message.User().ID().Id());
+        obj.put("user.name", message.User().Name());
         obj.put("ID", message.ID().Id());
         obj.put("text", message.Text());
         JSONObject locationJson = new JSONObject();
-        locationJson.put("lat", Float.parseFloat(message.Location().Lat()));
-        locationJson.put("lon", Float.parseFloat(message.Location().Lon()));
+        locationJson.put("lat", Float.parseFloat(message.Location().lat()));
+        locationJson.put("lon", Float.parseFloat(message.Location().lon()));
         obj.put("location", locationJson);
-        obj.put("status", message.Status().toString());
+        obj.put("createAd", FormatDataService.getDateFromDate(message.createAt()));
+        obj.put("sort", 0);
+        obj.put("status", message.status().toString());
         return obj.toJSONString();
     }
 

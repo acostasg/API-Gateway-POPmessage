@@ -15,9 +15,9 @@ public class MessageByLocationUserDSL {
      * @param limit    int
      * @return String
      */
-    public static String get(Location location, int from, int limit) { //TODO order by votes and date
+    public static String get(Location location, int from, int limit) {
         return "{" +
-                "\"from\" : " + from + ", \"size\" : " + limit + "," +
+                "\"from\" : " + from + ", \"size\" : " + limit + "," + PartialSortDSL.sort() +
                 "    \"query\": {" +
                 "        \"bool\" : {" +
                 must() +
@@ -25,8 +25,8 @@ public class MessageByLocationUserDSL {
                 "                \"geo_distance\" : {" +
                 "                    \"distance\" : \"" + distance + "km\"," +
                 "                    \"location\" : {" +
-                "                        \"lat\" : " + location.Lat() + "," +
-                "                        \"lon\" : " + location.Lon() + "" +
+                "                        \"lat\" : " + location.lat() + "," +
+                "                        \"lon\" : " + location.lon() + "" +
                 "                    }" +
                 "                }" +
                 "            }" +

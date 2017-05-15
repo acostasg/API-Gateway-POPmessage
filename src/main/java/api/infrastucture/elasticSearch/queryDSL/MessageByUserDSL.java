@@ -1,5 +1,6 @@
 package api.infrastucture.elasticSearch.queryDSL;
 
+import api.domain.entity.Status;
 import api.domain.entity.User;
 
 public class MessageByUserDSL {
@@ -11,9 +12,9 @@ public class MessageByUserDSL {
      * @param limit int
      * @return String
      */
-    public static String get(User user, int from, int limit) { //TODO order by date
+    public static String get(User user, int from, int limit) {
         return "{" +
-                "\"from\" : " + from + ", \"size\" : " + limit + "," + MessageByUserDSL.sort() +
+                "\"from\" : " + from + ", \"size\" : " + limit + "," + PartialSortDSL.sort() +
                 query(user) +
                 "}";
     }
@@ -23,20 +24,9 @@ public class MessageByUserDSL {
                 "    \"bool\": {" +
                 "      \"must\": [" +
                 "        { \"match\": { \"user.ID\":  \"" + user.ID().Id() + "\" }}," +
-                "        { \"match\": { \"status\": \"ACTIVE\"   }}" +
+                "        { \"match\": { \"status\": \"" + Status.ACTIVE + "\"   }}" +
                 "      ]" +
                 "    }" +
                 "  }";
-    }
-
-    /**
-     * Order by last message user publish
-     *
-     * @return String
-     */
-    private static String sort() {
-        return "    \"sort\" : [\n" +
-                " { \"_score\" : {\"order\" : \"asc\"}}" +
-                "    ],";
     }
 }

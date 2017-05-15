@@ -1,5 +1,6 @@
 package api.domain.entity;
 
+import java.util.Date;
 import java.util.List;
 
 public class Message {
@@ -10,6 +11,7 @@ public class Message {
     private Location location;
     private List<Vote> votes;
     private Status status;
+    private Date createAt;
 
     public Message(
             Id ID,
@@ -25,13 +27,32 @@ public class Message {
         this.location = location;
         this.votes = votes;
         this.status = status;
+        this.createAt = new Date();
+    }
+
+    public Message(
+            Id ID,
+            User user,
+            String text,
+            Location location,
+            List<Vote> votes,
+            Status status,
+            Date createAd
+    ) {
+        this.ID = ID;
+        this.user = user;
+        this.text = text;
+        this.location = location;
+        this.votes = votes;
+        this.status = status;
+        this.createAt = createAd;
     }
 
     public Id ID() {
         return ID;
     }
 
-    public User user() {
+    public User User() {
         return user;
     }
 
@@ -43,15 +64,19 @@ public class Message {
         return location;
     }
 
-    public List<Vote> Votes() {
+    public List<Vote> votes() {
         return votes;
     }
 
-    public Status Status() {
+    public Status status() {
         return status;
     }
 
-    public void Delete() {
+    public Date createAt() {
+        return this.createAt;
+    }
+
+    public void delete() {
         this.status = Status.DELETED;
     }
 

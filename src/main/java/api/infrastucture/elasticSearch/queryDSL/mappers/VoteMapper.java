@@ -55,12 +55,12 @@ public class VoteMapper {
 
         JSONArray votes = new JSONArray();
 
-        for (Vote vote : message.Votes()) {
+        for (Vote vote : message.votes()) {
             votes.add(
                     Json.createObjectBuilder()
-                            .add("messageID", vote.MessageID().Id())
-                            .add("userID", vote.UserID().Id())
-                            .add("type", vote.Type().toString()).build()
+                            .add("messageID", vote.messageID().Id())
+                            .add("userID", vote.userID().Id())
+                            .add("type", vote.type().toString()).build()
             );
         }
 

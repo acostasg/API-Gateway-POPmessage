@@ -63,7 +63,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
                 user,
                 message.Text(),
                 message.Location(),
-                message.Votes(),
+                message.votes(),
                 Status.DELETED
         );
     }

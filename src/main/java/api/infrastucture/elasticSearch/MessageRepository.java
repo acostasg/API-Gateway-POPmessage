@@ -111,7 +111,12 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             DocumentResult documentResult = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .set(this.messageMapper.encodeMessage(message), message.ID().Id());
+                    .set(
+                            this.messageMapper.encodeMessage(
+                                    message
+                            ),
+                            message.ID().Id()
+                    );
 
             if (documentResult.isSucceeded()) {
                 return message;
@@ -125,12 +130,17 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     @Override
     public Message deleteMessage(User user, Message message) {
-        message.Delete();
+        message.delete();
         try {
             this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .set(this.messageMapper.encodeMessage(message), message.ID().Id());
+                    .set(
+                            this.messageMapper.encodeMessage(
+                                    message
+                            ),
+                            message.ID().Id()
+                    );
         } catch (IOException e) {
             e.printStackTrace();
         }

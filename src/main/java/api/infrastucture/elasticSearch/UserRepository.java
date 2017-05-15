@@ -59,7 +59,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     .prepareSearch(index)
                     .setType(type)
                     .set(
-                            this.userMapper.encoderUser(user, getDateFromDate(user.Date())),
+                            this.userMapper.encoderUser(user),
                             user.ID().Id()
                     );
 
@@ -91,8 +91,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
             SearchResult.Hit<JSONObject, Void> user = response.getFirstHit(JSONObject.class);
             return this.userMapper.builderUserSearch(
-                    user,
-                    getDateFromString(user.source.get("crateAt").toString())
+                    user
             );
 
         } catch (Exception e) {
@@ -133,8 +132,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
 
             JSONObject userJson = responseUser.getSourceAsObject(JSONObject.class);
             return this.userMapper.builderUser(
-                    userJson,
-                    getDateFromString(userJson.get("crateAt").toString())
+                    userJson
             );
 
         } catch (java.io.IOException e) {
