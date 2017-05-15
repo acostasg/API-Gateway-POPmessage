@@ -8,7 +8,7 @@ class PartialSortDSL {
      */
     static String sort() {
         return "    \"sort\" : [\n" +
-                " { \"sort\" : {\"order\" : \"asc\"}}," + //order for likes
+                " { \"sort\" : {\"order\" : \"desc\"}}," + //order for likes
                 " { \"createAd\" : {\"order\" : \"asc\"}}," + //order for createAd, first last create
                 " { \"_score\" : {\"order\" : \"asc\"}}" + //_score for algorithm scope for query
                 "    ],";
