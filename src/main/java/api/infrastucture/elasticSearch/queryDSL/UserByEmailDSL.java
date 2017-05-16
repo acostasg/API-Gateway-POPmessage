@@ -10,11 +10,16 @@ public class UserByEmailDSL {
      * @return String
      */
     public static String get(User user) {
-
         return "{" +
-                "  \"query\": {" +
-                "    \"match\" : { \"userLogin\" : \"" + user.userLogin() + "\" } " +
-                "  }" +
+                "   \"query\": {" +
+                "      \"constant_score\": {" +
+                "         \"filter\": {" +
+                "            \"term\": {" +
+                "               \"userLogin\": \"" + user.userLogin() + "\"" +
+                "            }" +
+                "         }" +
+                "      }" +
+                "   }" +
                 "}";
     }
 }

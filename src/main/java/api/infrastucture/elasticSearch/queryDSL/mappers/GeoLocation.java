@@ -17,6 +17,10 @@ public class GeoLocation {
         this.locationString = locationString;
     }
 
+    public static Location decode(String locationString) {
+        return new GeoLocation(locationString).decode();
+    }
+
     private Location decode() {
         String raw = this.locationString.replaceAll(Pattern.quote("{lon="), "");
         raw = raw.replaceAll(Pattern.quote("lat="), "");
@@ -24,9 +28,5 @@ public class GeoLocation {
         String[] attr = raw.split(",");
 
         return new Location(attr[0], attr[1]);
-    }
-
-    public static Location decode(String locationString) {
-        return new GeoLocation(locationString).decode();
     }
 }

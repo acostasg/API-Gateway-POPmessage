@@ -11,11 +11,11 @@ public class EncodeWrapper {
         this.text = text;
     }
 
-    private String Encode() {
-        return new String(Base64.encode(this.text.getBytes()));
-    }
-
     public static String Encoder(String text) {
         return new EncodeWrapper(text).Encode();
+    }
+
+    private String Encode() {
+        return new String(Base64.encode(this.text.getBytes()));
     }
 }

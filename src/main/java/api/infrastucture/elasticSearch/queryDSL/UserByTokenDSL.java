@@ -10,11 +10,16 @@ public class UserByTokenDSL {
      * @return String
      */
     public static String get(Token token) {
-
         return "{" +
-                "  \"query\": {" +
-                "    \"match\" : { \"hash\" : \"" + EncodeWrapper.Encoder(token.hash()) + "\" }" +
-                "  }" +
+                "   \"query\": {" +
+                "      \"constant_score\": {" +
+                "         \"filter\": {" +
+                "            \"term\": {" +
+                "               \"hash\": \"" + EncodeWrapper.Encoder(token.hash()) + "\"" +
+                "            }" +
+                "         }" +
+                "      }" +
+                "   }" +
                 "}";
     }
 }

@@ -21,11 +21,11 @@ import java.util.List;
 abstract class AbstractAPI {
 
     @Inject
-    protected MessageRepository messageRepository;
+    MessageRepository messageRepository;
     @Inject
-    protected TokenRepository tokenRepository;
+    TokenRepository tokenRepository;
     @Inject
-    protected UserRepository userRepository;
+    private UserRepository userRepository;
 
     User getUserByToken(String token) {
         CommandGetUserByToken userCaseGetUserByToken = new CommandGetUserByToken(
