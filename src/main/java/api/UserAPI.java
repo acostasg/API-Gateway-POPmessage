@@ -149,4 +149,23 @@ public class UserAPI extends AbstractAPI {
         return Response.ok(messageList.toString(), MediaType.APPLICATION_JSON).build();
     }
 
+    @GET
+    @Consumes(MediaType.TEXT_PLAIN)
+    @Path("/get")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response get(
+            @HeaderParam(value = "Authorization") String authorization,
+            @QueryParam("Token") String token
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
+        User user = this.getUserByToken(token);
+
+        if (null == user)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+        return Response.ok(user.toString(), MediaType.APPLICATION_JSON).build();
+    }
+
 }

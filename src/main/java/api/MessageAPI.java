@@ -52,6 +52,7 @@ public class MessageAPI extends AbstractAPI {
                 )
         );
 
+
         return Response.ok(messages.toString(), MediaType.APPLICATION_JSON).build();
     }
 

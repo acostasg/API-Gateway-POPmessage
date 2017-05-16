@@ -75,9 +75,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
             JestResult messageResponse = this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)
-                    .get(
-                            messageId.Id()
-                    );
+                    .get(messageId.Id());
 
             if (!messageResponse.isSucceeded()) {
                 return null;
