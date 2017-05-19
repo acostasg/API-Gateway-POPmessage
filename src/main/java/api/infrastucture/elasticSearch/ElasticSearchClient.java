@@ -11,8 +11,7 @@ import javax.inject.Singleton;
 
 public class ElasticSearchClient {
 
-    private static final String HOST = "http://192.168.1.132:17560";
-    private static final String HOST_DOCKER = "http://apache-proxy:17560";
+    private static final String HOST = "http://apache-proxy:5000";
 
     private String index;
     private String type;

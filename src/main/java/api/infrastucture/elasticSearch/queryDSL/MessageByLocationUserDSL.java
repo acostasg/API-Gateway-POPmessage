@@ -35,6 +35,10 @@ public class MessageByLocationUserDSL {
                 "}";
     }
 
+    /**
+     *
+     * @return String
+     */
     private static String must() {
         return "      \"must\": [" +
                 "        { \"match\": { \"status\": \"" + Status.ACTIVE + "\"   }}" +

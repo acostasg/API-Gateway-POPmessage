@@ -19,6 +19,11 @@ public class MessageByUserDSL {
                 "}";
     }
 
+    /**
+     *
+     * @param user User
+     * @return String
+     */
     private static String query(User user) {
         return "  \"query\": {" +
                 "    \"bool\": {" +
