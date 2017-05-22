@@ -36,7 +36,6 @@ public class MessageByLocationUserDSL {
     }
 
     /**
-     *
      * @return String
      */
     private static String must() {

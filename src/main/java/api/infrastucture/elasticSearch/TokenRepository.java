@@ -3,6 +3,7 @@ package api.infrastucture.elasticSearch;
 import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.infrastructure.UserRepository;
+import api.infrastucture.cache.CacheTokenInterface;
 import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -30,6 +31,9 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     @Inject
     private UserRepository userRepository;
 
+    @Inject
+    private CacheTokenInterface tokenInterface;
+
     @Override
     public Token generateToken(User user) {
         try {
@@ -56,6 +60,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
                     .set(obj.toJSONString(), user.ID().Id());
 
             if (documentResult.isSucceeded()) {
+                this.tokenInterface.setUser(user, token); //save in temp cache in memory
                 return token;
             }
 
@@ -70,8 +75,11 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     @Override
     public Token validateToken(Token token) {
         try {
-
-            User user = userRepository.getUserByToken(token);
+            User user;
+            if (this.tokenInterface.hasToken(token)) //check if user is in memory cache
+                user = this.tokenInterface.getUser(token);
+            else
+                user = userRepository.getUserByToken(token);
 
             DecodedJWT jwt = getDecodedJWT(token);
 
@@ -102,12 +110,15 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     }
 
     private boolean isValidTokenByUser(User user, DecodedJWT jwt) {
-        return user != null || user.ID().Id().equals(jwt.getSubject());
+        return user != null || user.getId().equals(jwt.getSubject());
     }
 
     @Override
     public void deleteToken(User user, Token token) {
         try {
+            if (this.tokenInterface.hasToken(token)) //delete token in memory if exist
+                this.tokenInterface.deleteUser(token);
+
             this.elasticSearchClient
                     .prepareSearch(index)
                     .setType(type)

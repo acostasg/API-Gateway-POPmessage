@@ -9,7 +9,7 @@ import io.searchbox.core.*;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-public class ElasticSearchClient {
+public class ElasticSearchClient implements ElasticSearchClientInterface {
 
     private static final String HOST = "http://apache-proxy:5000";
 
@@ -43,18 +43,18 @@ public class ElasticSearchClient {
         }
     }
 
-    ElasticSearchClient prepareSearch(String index) {
+    public ElasticSearchClientInterface prepareSearch(String index) {
         this.index = index;
         return this;
     }
 
-    ElasticSearchClient setType(String type) {
+    public ElasticSearchClientInterface setType(String type) {
         this.type = type;
         return this;
     }
 
 
-    SearchResult executeQuery(String searchSource) throws java.io.IOException {
+    public SearchResult executeQuery(String searchSource) throws java.io.IOException {
         Search search = new Search.Builder(searchSource)
                 .addIndex(this.index)
                 .addType(this.type)
@@ -64,22 +64,22 @@ public class ElasticSearchClient {
     }
 
 
-    JestResult get(String id) throws java.io.IOException {
+    public JestResult get(String id) throws java.io.IOException {
         Get get = new Get.Builder(this.index, id).type(this.type).build();
 
         return client.execute(get);
     }
 
-    DocumentResult set(String jsonBuilder, String id) throws java.io.IOException {
+    public DocumentResult set(String jsonBuilder, String id) throws java.io.IOException {
         Index index = new Index.Builder(jsonBuilder).id(id).index(this.index).type(this.type).build();
         return client.execute(index);
     }
 
-    DocumentResult put(String jsonBuilder, String id) throws java.io.IOException {
+    public DocumentResult put(String jsonBuilder, String id) throws java.io.IOException {
         return client.execute(new Update.Builder(jsonBuilder).index(this.index).type(this.type).id(id).build());
     }
 
-    JestResult del(String id) throws java.io.IOException {
+    public JestResult del(String id) throws java.io.IOException {
         return this.client.execute(new Delete.Builder(id).index(this.index).type(this.type).build());
     }
 

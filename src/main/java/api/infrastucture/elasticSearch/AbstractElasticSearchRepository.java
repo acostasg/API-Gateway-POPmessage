@@ -8,7 +8,7 @@ import java.util.Date;
 class AbstractElasticSearchRepository {
 
     @Inject
-    ElasticSearchClient elasticSearchClient;
+    ElasticSearchClientInterface elasticSearchClient;
 
     Date getDateExpiration() {
         return FormatDataService.getDateExpiration();

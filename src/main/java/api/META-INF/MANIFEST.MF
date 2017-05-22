@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Class-Path: jersey-media-jaxb-2.25.1.jar gson-2.6.2.jar kryo-4.0.0.jar
+  java-jwt-3.1.0.jar commons-logging-1.2.jar javax.inject-2.5.0-b32.ja
+ r javax.ws.rs-api-2.0.1.jar bcprov-jdk15on-1.55.jar jackson-core-2.8.
+ 4.jar jersey-entity-filtering-2.25.1.jar jest-common-2.4.0.jar grizzl
+ y-http-2.3.28.jar asm-5.0.4.jar validation-api-1.1.0.Final.jar httpas
+ yncclient-4.1.1.jar javassist-3.20.0-GA.jar jersey-guava-2.25.1.jar s
+ lf4j-api-1.7.21.jar minlog-1.3.0.jar jackson-annotations-2.8.0.jar je
+ rsey-server-2.25.1.jar jest-2.4.0.jar log4j-1.2.16.jar jersey-client-
+ 2.25.1.jar slf4j-log4j12-1.6.1.jar httpclient-4.5.2.jar jersey-contai
+ ner-grizzly2-http-2.25.1.jar guava-19.0.jar hk2-api-2.5.0-b32.jar htt
+ pcore-nio-4.4.4.jar jersey-media-moxy-2.25.1.jar httpcore-4.4.4.jar c
+ ommons-codec-1.10.jar hk2-utils-2.5.0-b32.jar commons-lang3-3.4.jar e
+ hcache-3.3.1.jar hk2-locator-2.5.0-b32.jar jackson-databind-2.8.4.jar
+  org.eclipse.persistence.moxy-2.6.0.jar grizzly-http-server-2.3.28.ja
+ r org.eclipse.persistence.core-2.6.0.jar reflectasm-1.11.3.jar json-s
+ imple-1.1.1.jar grizzly-framework-2.3.28.jar objenesis-2.2.jar jersey
+ -common-2.25.1.jar osgi-resource-locator-1.0.1.jar javax.json-1.0.4.j
+ ar aopalliance-repackaged-2.5.0-b32.jar javax.annotation-api-1.2.jar 
+ org.eclipse.persistence.asm-2.6.0.jar
+Main-Class: api.Main
+

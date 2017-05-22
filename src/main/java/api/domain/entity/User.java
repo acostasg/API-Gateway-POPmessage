@@ -64,6 +64,10 @@ public class User {
         return ID;
     }
 
+    public String getId() {
+        return ID.Id();
+    }
+
     public String Name() {
         return name;
     }

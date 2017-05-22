@@ -3,7 +3,10 @@ package api.binder;
 import api.domain.infrastructure.MessageRepository;
 import api.domain.infrastructure.TokenRepository;
 import api.domain.infrastructure.UserRepository;
+import api.infrastucture.cache.CacheTokenInterface;
+import api.infrastucture.cache.ehCache.CacheTokenWrapper;
 import api.infrastucture.elasticSearch.ElasticSearchClient;
+import api.infrastucture.elasticSearch.ElasticSearchClientInterface;
 import org.glassfish.hk2.utilities.binding.AbstractBinder;
 import org.glassfish.jersey.process.internal.RequestScoped;
 
@@ -25,8 +28,14 @@ public class POPMessageBinder extends AbstractBinder {
                 .named(api.infrastucture.elasticSearch.UserRepository.class.getCanonicalName())
                 .in(RequestScoped.class);
         bind(ElasticSearchClient.class)
-                .to(ElasticSearchClient.class)
+                .to(ElasticSearchClientInterface.class)
                 .named(ElasticSearchClient.class.getCanonicalName())
                 .in(Singleton.class);
+        bind(CacheTokenWrapper.class)
+                .to(CacheTokenInterface.class)
+                .named(CacheTokenWrapper.class.getCanonicalName())
+                .in(Singleton.class);
+
+
     }
 }

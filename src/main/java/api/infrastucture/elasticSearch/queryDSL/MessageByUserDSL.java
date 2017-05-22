@@ -20,7 +20,6 @@ public class MessageByUserDSL {
     }
 
     /**
-     *
      * @param user User
      * @return String
      */

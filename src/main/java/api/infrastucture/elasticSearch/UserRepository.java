@@ -6,6 +6,7 @@ import api.domain.entity.Token;
 import api.domain.entity.User;
 import api.domain.exceptions.UserInUse;
 import api.domain.factory.UserFactory;
+import api.infrastucture.cache.CacheTokenInterface;
 import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
 import api.infrastucture.elasticSearch.queryDSL.LoginUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.UserByEmailDSL;
@@ -17,6 +18,7 @@ import io.searchbox.core.SearchResult;
 import org.glassfish.hk2.utilities.reflection.Logger;
 import org.json.simple.JSONObject;
 
+import javax.inject.Inject;
 import java.util.UUID;
 
 public class UserRepository extends AbstractElasticSearchRepository implements api.domain.infrastructure.UserRepository {
@@ -28,6 +30,9 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     private static final String type_toke = "token";
 
     private final UserMapper userMapper = new UserMapper();
+
+    @Inject
+    private CacheTokenInterface cacheToken;
 
     @Override
     public User registerUser(String name, String dateOfBirth, String userName, String password) throws UserInUse {
@@ -106,6 +111,12 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     @Override
     public User getUserByToken(Token token) {
         try {
+
+            if (this.cacheToken.hasToken(token)) {
+                return this.cacheToken.getUser(token);
+            }
+
+
             SearchResult response = this.elasticSearchClient.
                     prepareSearch(index_token).
                     setType(type_toke).
