@@ -106,7 +106,7 @@ public class UserAPI extends AbstractAPI {
                 this.userRepository
         );
 
-        User user = null;
+        User user;
         try {
             user = userCase.execute(
                     new RegisterUserRequest(

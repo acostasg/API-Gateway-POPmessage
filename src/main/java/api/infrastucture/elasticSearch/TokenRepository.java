@@ -32,7 +32,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     private UserRepository userRepository;
 
     @Inject
-    private CacheTokenInterface tokenInterface;
+    private CacheTokenInterface cacheToken;
 
     @Override
     public Token generateToken(User user) {
@@ -60,7 +60,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
                     .set(obj.toJSONString(), user.ID().Id());
 
             if (documentResult.isSucceeded()) {
-                this.tokenInterface.setUser(user, token); //save in temp cache in memory
+                this.cacheToken.setUser(user, token); //save in temp cache in memory
                 return token;
             }
 
@@ -76,8 +76,8 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     public Token validateToken(Token token) {
         try {
             User user;
-            if (this.tokenInterface.hasToken(token)) //check if user is in memory cache
-                user = this.tokenInterface.getUser(token);
+            if (this.cacheToken.hasToken(token)) //check if user is in memory cache
+                user = this.cacheToken.getUser(token);
             else
                 user = userRepository.getUserByToken(token);
 
@@ -116,8 +116,8 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     @Override
     public void deleteToken(User user, Token token) {
         try {
-            if (this.tokenInterface.hasToken(token)) //delete token in memory if exist
-                this.tokenInterface.deleteUser(token);
+            if (this.cacheToken.hasToken(token)) //delete token in memory if exist
+                this.cacheToken.deleteUser(token);
 
             this.elasticSearchClient
                     .prepareSearch(index)

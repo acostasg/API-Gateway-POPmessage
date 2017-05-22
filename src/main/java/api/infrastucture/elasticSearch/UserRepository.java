@@ -112,9 +112,8 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     public User getUserByToken(Token token) {
         try {
 
-            if (this.cacheToken.hasToken(token)) {
+            if (this.cacheToken.hasToken(token))
                 return this.cacheToken.getUser(token);
-            }
 
 
             SearchResult response = this.elasticSearchClient.
