@@ -14,13 +14,13 @@ import java.util.ArrayList;
 
 public class VoteMapper {
 
-    public static final String DOC = "{\"doc\":";
-    public static final String DOC_END = "}";
+    private static final String DOC = "{\"doc\":";
+    private static final String DOC_END = "}";
 
-    public VoteMapper() {
+    VoteMapper() {
     }
 
-    public Vote builderVote(LinkedTreeMap userJson) {
+    private Vote builderVote(LinkedTreeMap userJson) {
         try {
             return VoteFactory.build(
                     new Id(userJson.get("messageID").toString()),
@@ -34,7 +34,7 @@ public class VoteMapper {
         return null;
     }
 
-    public ArrayList<Vote> builderVotes(ArrayList<LinkedTreeMap> votesJson) {
+    ArrayList<Vote> builderVotes(ArrayList<LinkedTreeMap> votesJson) {
         ArrayList<Vote> result = new ArrayList<>();
         if (null == votesJson)
             return result;

@@ -4,7 +4,7 @@ import api.domain.entity.Location;
 
 import java.util.regex.Pattern;
 
-public class GeoLocation {
+class GeoLocation {
     private String locationString;
 
     /**
@@ -17,7 +17,7 @@ public class GeoLocation {
         this.locationString = locationString;
     }
 
-    public static Location decode(String locationString) {
+    static Location decode(String locationString) {
         return new GeoLocation(locationString).decode();
     }
 

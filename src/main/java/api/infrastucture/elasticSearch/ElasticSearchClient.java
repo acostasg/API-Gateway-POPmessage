@@ -11,8 +11,8 @@ import javax.inject.Singleton;
 
 public class ElasticSearchClient implements ElasticSearchClientInterface {
 
-    private static final String HOST = "http://apache-proxy:5000";
-    private static final String HOST_DEV = "http://0.0.0.0:17560";
+    private static final String HOST_PRO = "http://apache-proxy:5000";
+    private static final String HOST = "http://0.0.0.0:17560";
 
     private String index;
     private String type;

@@ -18,9 +18,9 @@ import java.util.Map;
 
 public class TokenSerializer implements Serializer<User>, Closeable {
 
-    protected static final Kryo kryo = new Kryo();
+    private static final Kryo kryo = new Kryo();
 
-    protected Map<Class, Integer> objectHeaderMap = new HashMap<Class, Integer>();
+    private Map<Class, Integer> objectHeaderMap = new HashMap<Class, Integer>();
 
     public TokenSerializer() {
     }
@@ -29,7 +29,7 @@ public class TokenSerializer implements Serializer<User>, Closeable {
         populateObjectHeadersMap(kryo.register(User.class));
     }
 
-    protected void populateObjectHeadersMap(Registration reg) {
+    private void populateObjectHeadersMap(Registration reg) {
         objectHeaderMap.put(reg.getType(), reg.getId());
     }
 
