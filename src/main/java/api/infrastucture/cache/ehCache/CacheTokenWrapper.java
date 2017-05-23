@@ -12,22 +12,27 @@ import org.ehcache.config.builders.CacheManagerBuilder;
 import org.ehcache.config.builders.ResourcePoolsBuilder;
 import org.ehcache.config.units.MemoryUnit;
 
+import javax.inject.Singleton;
+
 public class CacheTokenWrapper implements CacheTokenInterface {
 
     private Cache<String, User> tokenCache;
 
+    @Singleton
     public CacheTokenWrapper() {
         if (null == tokenCache) {
-            CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
-            CacheConfiguration<String, User> cacheConfig =
-                    CacheConfigurationBuilder.newCacheConfigurationBuilder(
-                            String.class,
-                            User.class,
-                            ResourcePoolsBuilder.heap(10).offheap(10, MemoryUnit.MB)
-                    ).withValueSerializer(TokenSerializer.class)
-                            .build();
+            synchronized (this) {
+                CacheManager cacheManager = CacheManagerBuilder.newCacheManagerBuilder().build(true);
+                CacheConfiguration<String, User> cacheConfig =
+                        CacheConfigurationBuilder.newCacheConfigurationBuilder(
+                                String.class,
+                                User.class,
+                                ResourcePoolsBuilder.heap(10).offheap(10, MemoryUnit.MB)
+                        ).withValueSerializer(TokenSerializer.class)
+                                .build();
 
-            this.tokenCache = cacheManager.createCache("tokenCache", cacheConfig);
+                this.tokenCache = cacheManager.createCache("tokenCache", cacheConfig);
+            }
         }
     }
 

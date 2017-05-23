@@ -13,6 +13,9 @@ public class User {
     private Status status;
     private Date date;
 
+    public User() {  // no-arg constructor
+    }
+
     public User(
             Id ID,
             String name

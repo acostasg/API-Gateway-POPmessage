@@ -12,6 +12,7 @@ import javax.inject.Singleton;
 public class ElasticSearchClient implements ElasticSearchClientInterface {
 
     private static final String HOST = "http://apache-proxy:5000";
+    private static final String HOST_DEV = "http://0.0.0.0:17560";
 
     private String index;
     private String type;
@@ -28,15 +29,17 @@ public class ElasticSearchClient implements ElasticSearchClientInterface {
     private void startConnection() {
         try {
             if (null == this.client) {
-                JestClientFactory factory = new JestClientFactory();
-                factory.setHttpClientConfig(new HttpClientConfig
-                        .Builder(HOST)
-                        .defaultMaxTotalConnectionPerRoute(5)
-                        .maxTotalConnection(30)
-                        .multiThreaded(true)
-                        .build()
-                );
-                this.client = factory.getObject();
+                synchronized (this) {
+                    JestClientFactory factory = new JestClientFactory();
+                    factory.setHttpClientConfig(new HttpClientConfig
+                            .Builder(HOST)
+                            .defaultMaxTotalConnectionPerRoute(5)
+                            .maxTotalConnection(30)
+                            .multiThreaded(true)
+                            .build()
+                    );
+                    this.client = factory.getObject();
+                }
             }
         } catch (Exception exception) {
             exception.printStackTrace();

@@ -141,9 +141,14 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
             }
 
             JSONObject userJson = responseUser.getSourceAsObject(JSONObject.class);
-            return this.userMapper.builderUser(
+            User user = this.userMapper.builderUser(
                     userJson
             );
+
+            if (!this.cacheToken.hasToken(token))
+                this.cacheToken.setUser(user, token);
+
+            return user;
 
         } catch (java.io.IOException e) {
             e.printStackTrace();
