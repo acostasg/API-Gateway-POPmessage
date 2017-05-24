@@ -19,4 +19,8 @@ public class Id {
     public String toString() {
         return "\"Id\":{\"id\":\"" + id + "\"}";
     }
+
+    String toStringVote() {
+        return "{\"id\":\"" + id + "\"}";
+    }
 }

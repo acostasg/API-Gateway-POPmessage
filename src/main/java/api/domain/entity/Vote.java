@@ -27,8 +27,8 @@ public class Vote {
     @Override
     public String toString() {
         return "{" +
-                "\"messageID\": { " + messageID + "}" +
-                ", \"userID\":{" + userID + "}" +
+                "\"messageID\": " + messageID.toStringVote() + "" +
+                ", \"userID\":" + userID.toStringVote() + "" +
                 ", \"type\":\"" + type + "\"" +
                 "}";
     }

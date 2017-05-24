@@ -150,8 +150,8 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
     @Override
     public Message addVoteToMessage(User user, Message message, Type typeMessage) {
         Vote vote = VoteFactory.build(
-                user.ID(),
-                message.ID(),
+                message,
+                user,
                 typeMessage
         );
 

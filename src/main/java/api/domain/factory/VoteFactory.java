@@ -1,18 +1,28 @@
 package api.domain.factory;
 
-import api.domain.entity.Id;
-import api.domain.entity.Type;
-import api.domain.entity.Vote;
+import api.domain.entity.*;
 
 public class VoteFactory {
     public static Vote build(
-            Id messageId,
-            Id userId,
+            Id message,
+            Id user,
             Type type
     ) {
         return new Vote(
-                messageId,
-                userId,
+                message,
+                user,
+                type
+        );
+    }
+
+    public static Vote build(
+            Message message,
+            User user,
+            Type type
+    ) {
+        return new Vote(
+                message.ID(),
+                user.ID(),
                 type
         );
     }
