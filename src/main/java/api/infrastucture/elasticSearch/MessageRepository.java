@@ -6,6 +6,7 @@ import api.domain.factory.VoteFactory;
 import api.infrastucture.elasticSearch.queryDSL.AddVoteToMessageDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByLocationUserDSL;
 import api.infrastucture.elasticSearch.queryDSL.MessageByUserDSL;
+import api.infrastucture.elasticSearch.queryDSL.UpdateMessageDSL;
 import api.infrastucture.elasticSearch.queryDSL.mappers.MessageMapper;
 import io.searchbox.client.JestResult;
 import io.searchbox.core.DocumentResult;
@@ -181,7 +182,7 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
                     .prepareSearch(index)
                     .setType(type)
                     .put(
-                            this.messageMapper.encodePartialMessage(
+                            UpdateMessageDSL.get(
                                     message
                             ),
                             message.ID().Id()
