@@ -77,6 +77,21 @@ public class MessageTest extends AbstractTest {
     }
 
     @Test
+    public void test_message_update() {
+        Form input = new Form();
+        input.param("message", "DummyId");
+        input.param("text", "Text Sample update");
+        Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
+
+        Response response = this.target.path("message/update")
+                .queryParam("Token", TOKEN)
+                .request()
+                .header("Authorization", APP_KEY)
+                .post(entity);
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+    }
+
+    @Test
     public void test_delete() {
         Form input = new Form();
         input.param("message", "DummyId");

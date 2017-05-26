@@ -23,4 +23,6 @@ public interface MessageRepository {
 
     Message addVoteToMessage(User user, Message message, Type status);
 
+    Message updateMessage(Message message);
+
 }

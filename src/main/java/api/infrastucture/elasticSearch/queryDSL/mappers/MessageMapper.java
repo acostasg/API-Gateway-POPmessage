@@ -65,4 +65,10 @@ public class MessageMapper {
         return obj.toJSONString();
     }
 
+    public String encodePartialMessage(Message message) {
+        JSONObject obj = new JSONObject();
+        obj.put("text", message.Text());
+        return obj.toJSONString();
+    }
+
 }

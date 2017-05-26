@@ -56,6 +56,10 @@ public class Message {
         return user;
     }
 
+    public String userId() {
+        return this.user.getId();
+    }
+
     public String Text() {
         return text;
     }

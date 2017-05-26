@@ -124,4 +124,9 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
         );
         return votes;
     }
+
+    @Override
+    public Message updateMessage(Message message) {
+        return message;
+    }
 }

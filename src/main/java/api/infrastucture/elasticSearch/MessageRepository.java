@@ -173,4 +173,23 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
         return message;
     }
+
+    @Override
+    public Message updateMessage(Message message) {
+        try {
+            this.elasticSearchClient
+                    .prepareSearch(index)
+                    .setType(type)
+                    .put(
+                            this.messageMapper.encodePartialMessage(
+                                    message
+                            ),
+                            message.ID().Id()
+                    );
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return message;
+    }
 }

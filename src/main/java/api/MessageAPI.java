@@ -3,9 +3,11 @@ package api;
 import api.domain.command.CommandCreateMessage;
 import api.domain.command.CommandDeleteMessage;
 import api.domain.command.CommandGetMessagesByLocation;
+import api.domain.command.CommandUpdateMessage;
 import api.domain.command.request.CreateMessagesRequest;
 import api.domain.command.request.DeleteMessagesRequest;
 import api.domain.command.request.GetMessagesByLocationRequest;
+import api.domain.command.request.UpdateMessagesRequest;
 import api.domain.entity.Id;
 import api.domain.entity.Message;
 import api.domain.entity.Type;
@@ -163,6 +165,44 @@ public class MessageAPI extends AbstractAPI {
         );
 
         return Response.ok(message.toString(), MediaType.APPLICATION_JSON).build();
+    }
+
+    @POST
+    @Path("/update")
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response put(
+            @HeaderParam(value = "Authorization") String authorization,
+            @FormParam("text") String text,
+            @FormParam("message") String messageId,
+            @QueryParam("Token") String token
+    ) throws InvalidAppKey {
+
+        ValidationAppService.validateKeyApp(authorization);
+
+        User user = this.getUserByToken(token);
+
+        if (null == user)
+            return Response.status(Response.Status.BAD_REQUEST).build();
+
+
+        CommandUpdateMessage useCase = new CommandUpdateMessage(
+                this.messageRepository
+        );
+
+        Message message = useCase.execute(
+                new UpdateMessagesRequest(
+                        new Id(messageId),
+                        text,
+                        user
+                )
+        );
+
+        if (null == message)
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+
+
+        return Response.ok(user.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 }
