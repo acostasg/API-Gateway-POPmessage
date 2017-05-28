@@ -1,13 +1,22 @@
 package api.domain.service;
 
 import api.domain.exceptions.InvalidAppKey;
+import api.domain.infrastructure.ConfigRepository;
+
+import javax.inject.Inject;
 
 public class ValidationAppService {
 
-    private final static String key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+    @Inject
+    private ConfigRepository configRepository;
 
-    public static void validateKeyApp(String key) throws InvalidAppKey {
-        if (!key.equals(ValidationAppService.key)) {
+    @Inject
+    public ValidationAppService(ConfigRepository configRepository) {
+        this.configRepository = configRepository;
+    }
+
+    public void validationKey(String key) throws InvalidAppKey {
+        if (!this.configRepository.get("keyApp").equals(key)) {
             throw new InvalidAppKey("Invalid key application");
         }
     }

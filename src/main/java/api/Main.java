@@ -16,14 +16,14 @@ import java.net.URI;
  */
 public class Main extends ResourceConfig {
 
-    public static final String BASE_URI = "http://0.0.0.0:8080/";
+    static final String BASE_URI = "http://0.0.0.0:8080/";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
      *
      * @return Grizzly HTTP server.
      */
-    public static HttpServer startServer() {
+    static HttpServer startServer() {
         BasicConfigurator.configure();
         final ResourceConfig rc = new ResourceConfig().packages("api");
         rc.register(new POPMessageBinder());
@@ -36,7 +36,7 @@ public class Main extends ResourceConfig {
      *
      * @return Grizzly HTTP server.
      */
-    public static HttpServer startServerTest() {
+    static HttpServer startServerTest() {
         final ResourceConfig rc = new ResourceConfig().packages("api");
         rc.register(new POPMessageTestBinder());
         return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
@@ -45,7 +45,7 @@ public class Main extends ResourceConfig {
     /**
      * Main method.
      *
-     * @param args
+     * @param args String[]
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {

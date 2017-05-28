@@ -1,7 +1,10 @@
 package api.infrastucture.elasticSearch.queryDSL;
 
+import api.domain.infrastructure.ConfigRepository;
+
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
+import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -13,21 +16,25 @@ import static java.util.Base64.getEncoder;
 
 public class EncodeWrapper {
 
+    private static final String ENCODER_MESSAGES_KEY = "encoderMessages";
     private static final int MINIM = 16;
-    private static final String SECRET_KEY = "1263472456324561";
-    private String text;
+    private static final char CHAR = '-';
 
-    private EncodeWrapper(String text) {
-        this.text = text;
-    }
+    @Inject
+    private ConfigRepository configRepository;
 
-    public static String Encoder(String text) {
-        return new EncodeWrapper(text).encode();
+    @Inject
+    public EncodeWrapper(ConfigRepository configRepository) {
+        this.configRepository = configRepository;
     }
 
     private SecretKey generateKey()
             throws NoSuchAlgorithmException, InvalidKeySpecException {
-        return new SecretKeySpec(SECRET_KEY.getBytes(), "AES");
+        return new SecretKeySpec(getSecretKeyBytes(), "AES");
+    }
+
+    private byte[] getSecretKeyBytes() {
+        return this.configRepository.get(ENCODER_MESSAGES_KEY).getBytes();
     }
 
     private byte[] encryptMsg(String message, SecretKey secret)
@@ -45,11 +52,11 @@ public class EncodeWrapper {
         return new String(encoder.encode(encrypt));
     }
 
-    private String encode() {
+    public String encode(String text) {
         try {
             return this.packageToSend(
                     this.encryptMsg(
-                            getText(),
+                            getText(text),
                             this.generateKey()
                     )
             );
@@ -58,17 +65,16 @@ public class EncodeWrapper {
         }
     }
 
-    private String getText() {
-        if (this.text.length() < MINIM) {
-            char add = '-';
-            int number = MINIM - this.text.length();
+    private String getText(String text) {
+        if (text.length() < MINIM) {
+            int number = MINIM - text.length();
 
             char[] repeat = new char[number];
-            Arrays.fill(repeat, add);
-            this.text += new String(repeat);
+            Arrays.fill(repeat, CHAR);
+            text += new String(repeat);
         }
 
-        return this.text;
+        return text;
     }
 
 }

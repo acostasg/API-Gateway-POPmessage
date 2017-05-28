@@ -32,6 +32,9 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
     private final UserMapper userMapper = new UserMapper();
 
     @Inject
+    private EncodeWrapper encodeWrapper;
+
+    @Inject
     private CacheTokenInterface cacheToken;
 
     @Override
@@ -44,7 +47,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     new Id(uuid.toString()),
                     name,
                     userName,
-                    EncodeWrapper.Encoder(password),
+                    this.encodeWrapper.encode(password),
                     Status.ACTIVE,
                     getDateFromString(dateOfBirth)
             );
@@ -86,7 +89,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     prepareSearch(index).
                     setType(type).
                     executeQuery(
-                            LoginUserDSL.get(userName, password)
+                            LoginUserDSL.get(userName, password, this.encodeWrapper)
                     );
 
 
@@ -120,7 +123,7 @@ public class UserRepository extends AbstractElasticSearchRepository implements a
                     prepareSearch(index_token).
                     setType(type_toke).
                     executeQuery(
-                            UserByTokenDSL.get(token)
+                            UserByTokenDSL.get(token, this.encodeWrapper)
                     );
 
             if (!response.isSucceeded() || response.getTotal() <= 0) {

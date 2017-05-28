@@ -16,6 +16,7 @@ import javax.inject.Singleton;
 
 public class CacheTokenWrapper implements CacheTokenInterface {
 
+    private static final String TOKEN_CACHE = "tokenCache";
     private Cache<String, User> tokenCache;
 
     @Singleton
@@ -31,7 +32,7 @@ public class CacheTokenWrapper implements CacheTokenInterface {
                         ).withValueSerializer(TokenSerializer.class)
                                 .build();
 
-                this.tokenCache = cacheManager.createCache("tokenCache", cacheConfig);
+                this.tokenCache = cacheManager.createCache(TOKEN_CACHE, cacheConfig);
             }
         }
     }

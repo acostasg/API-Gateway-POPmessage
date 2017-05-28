@@ -14,7 +14,6 @@ import api.domain.entity.Type;
 import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.exceptions.InvalidUser;
-import api.domain.service.ValidationAppService;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -36,7 +35,7 @@ public class MessageAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 
@@ -71,7 +70,7 @@ public class MessageAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 
@@ -105,7 +104,7 @@ public class MessageAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         try {
             Message message = this.getAddVoteToMessage(messageId, token, Type.POSITIVE);
@@ -125,7 +124,7 @@ public class MessageAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         try {
             Message message = this.getAddVoteToMessage(messageId, token, Type.NEGATIVE);
@@ -146,7 +145,7 @@ public class MessageAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 
@@ -178,7 +177,7 @@ public class MessageAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 

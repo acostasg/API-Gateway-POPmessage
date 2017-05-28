@@ -10,9 +10,11 @@ import java.util.Locale;
 public class FormatDataService {
 
     private static final Locale LOCALE = Locale.ENGLISH;
+    private static final String DD_MM_YYYY = "dd/mm/yyyy";
+    private static final String YYYY_MM_DD = "yyyy-MM-dd";
 
     public static String DataFormat(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", LOCALE);
+        DateFormat dateFormat = new SimpleDateFormat(YYYY_MM_DD, LOCALE);
         return dateFormat.format(date);
     }
 
@@ -26,7 +28,7 @@ public class FormatDataService {
     }
 
     public static Date getDateFromString(String dateOfBirth) {
-        DateFormat format = new SimpleDateFormat("dd/mm/yyyy", LOCALE);
+        DateFormat format = new SimpleDateFormat(DD_MM_YYYY, LOCALE);
         Date date;
         try {
             date = format.parse(dateOfBirth);
@@ -37,8 +39,7 @@ public class FormatDataService {
     }
 
     public static String getDateFromDate(Date dateOfBirth) {
-        String DATE_FORMAT_NOW = "dd/mm/yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT_NOW, LOCALE);
+        SimpleDateFormat sdf = new SimpleDateFormat(DD_MM_YYYY, LOCALE);
         return sdf.format(dateOfBirth);
     }
 }

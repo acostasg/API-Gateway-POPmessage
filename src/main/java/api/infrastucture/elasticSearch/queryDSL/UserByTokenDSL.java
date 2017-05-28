@@ -9,13 +9,13 @@ public class UserByTokenDSL {
      * @param token Token
      * @return String
      */
-    public static String get(Token token) {
+    public static String get(Token token, EncodeWrapper encodeWrapper) {
         return "{" +
                 "   \"query\": {" +
                 "      \"constant_score\": {" +
                 "         \"filter\": {" +
                 "            \"term\": {" +
-                "               \"hash\": \"" + EncodeWrapper.Encoder(token.hash()) + "\"" +
+                "               \"hash\": \"" + encodeWrapper.encode(token.hash()) + "\"" +
                 "            }" +
                 "         }" +
                 "      }" +

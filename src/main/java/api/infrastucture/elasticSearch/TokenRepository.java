@@ -2,6 +2,7 @@ package api.infrastucture.elasticSearch;
 
 import api.domain.entity.Token;
 import api.domain.entity.User;
+import api.domain.infrastructure.ConfigRepository;
 import api.domain.infrastructure.UserRepository;
 import api.infrastucture.cache.CacheTokenInterface;
 import api.infrastucture.elasticSearch.queryDSL.EncodeWrapper;
@@ -14,9 +15,13 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import io.searchbox.core.DocumentResult;
 import org.json.simple.JSONObject;
 
+import javax.crypto.spec.SecretKeySpec;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Date;
 
 
@@ -25,8 +30,8 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     private static final String index = "token_index";
     private static final String type = "token";
 
-    private static final String secret = "G2fBYWd9W43z63IaAro9J9QWOi2t03zw";
-    private static final String autO = "k9i4E1t8tI";
+    private static final String SECRET = "secret";
+    private static final String AUT_O = "autO";
 
     @Inject
     private UserRepository userRepository;
@@ -34,12 +39,35 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
     @Inject
     private CacheTokenInterface cacheToken;
 
+    @Inject
+    private ConfigRepository configRepository;
+
+    @Inject
+    private EncodeWrapper encodeWrapper;
+
+    private String SecretKeySpec(User user) {
+        try {
+            byte[] key = (user.userLogin() + getSecret() + user.password()).getBytes("UTF-8");
+            MessageDigest sha = MessageDigest.getInstance("SHA-1");
+            key = sha.digest(key);
+            key = Arrays.copyOf(key, 16); // use only first 128 bit
+            return new SecretKeySpec(key, "AES").toString();
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return getSecret();
+        }
+    }
+
+    private String getSecret() {
+        return this.configRepository.get(SECRET);
+    }
+
     @Override
     public Token generateToken(User user) {
         try {
-            Algorithm algorithm = Algorithm.HMAC256(secret);
+            Algorithm algorithm = Algorithm.HMAC256(this.SecretKeySpec(user));
             String tokenString = JWT.create()
-                    .withIssuer(autO)
+                    .withIssuer(getAutO())
                     .withExpiresAt(getDateExpiration())
                     .withSubject(user.ID().Id())
                     .sign(algorithm);
@@ -50,7 +78,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
 
 
             JSONObject obj = new JSONObject();
-            obj.put("hash", EncodeWrapper.Encoder(token.hash()));
+            obj.put("hash", this.encodeWrapper.encode(token.hash()));
             obj.put("userId", user.ID().Id());
             obj.put("crateAt", getDateFromDate(new Date()));
 
@@ -72,6 +100,10 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
         return null;
     }
 
+    private String getAutO() {
+        return this.configRepository.get(AUT_O);
+    }
+
     @Override
     public Token validateToken(Token token) {
         try {
@@ -81,7 +113,7 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
             else
                 user = userRepository.getUserByToken(token);
 
-            DecodedJWT jwt = getDecodedJWT(token);
+            DecodedJWT jwt = getDecodedJWT(token, user);
 
             if (!isValidTokenByUser(user, jwt)) {
                 return null;
@@ -101,10 +133,10 @@ public class TokenRepository extends AbstractElasticSearchRepository implements 
         }
     }
 
-    private DecodedJWT getDecodedJWT(Token token) throws UnsupportedEncodingException {
-        Algorithm algorithm = Algorithm.HMAC256(secret);
+    private DecodedJWT getDecodedJWT(Token token, User user) throws UnsupportedEncodingException {
+        Algorithm algorithm = Algorithm.HMAC256(this.SecretKeySpec(user));
         JWTVerifier verifier = JWT.require(algorithm)
-                .withIssuer(autO)
+                .withIssuer(getAutO())
                 .build();
         return verifier.verify(token.hash());
     }

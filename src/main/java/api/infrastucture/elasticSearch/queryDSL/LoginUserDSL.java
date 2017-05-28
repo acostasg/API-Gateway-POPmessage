@@ -11,7 +11,7 @@ public class LoginUserDSL {
      * @param password String
      * @return String
      */
-    public static String get(String userName, String password) {
+    public static String get(String userName, String password, EncodeWrapper encodeWrapper) {
         return "{\n" +
                 "   \"query\": {" +
                 "      \"constant_score\": {" +
@@ -25,7 +25,7 @@ public class LoginUserDSL {
                 "                  }," +
                 "                  {" +
                 "                     \"term\": {" +
-                "                        \"password\": \"" + EncodeWrapper.Encoder(password) + "\"" +
+                "                        \"password\": \"" + encodeWrapper.encode(password) + "\"" +
                 "                     }" +
                 "                  }," +
                 "                  {" +

@@ -5,7 +5,6 @@ import api.domain.command.request.ValidateTokenRequest;
 import api.domain.entity.Token;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.infrastructure.TokenRepository;
-import api.domain.service.ValidationAppService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -13,7 +12,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 @Path("session")
-public class SessionAPI {
+public class SessionAPI extends AbstractAPI {
 
     @Inject
     private TokenRepository tokenRepository;
@@ -27,7 +26,7 @@ public class SessionAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         CommandValidateToken userCase = new CommandValidateToken(
                 this.tokenRepository

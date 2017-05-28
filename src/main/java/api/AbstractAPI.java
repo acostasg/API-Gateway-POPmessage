@@ -14,6 +14,7 @@ import api.domain.exceptions.InvalidUser;
 import api.domain.infrastructure.MessageRepository;
 import api.domain.infrastructure.TokenRepository;
 import api.domain.infrastructure.UserRepository;
+import api.domain.service.ValidationAppService;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -24,6 +25,8 @@ abstract class AbstractAPI {
     MessageRepository messageRepository;
     @Inject
     TokenRepository tokenRepository;
+    @Inject
+    ValidationAppService validationAppService;
     @Inject
     private UserRepository userRepository;
 

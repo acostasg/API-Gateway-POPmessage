@@ -1,5 +1,6 @@
 package api.infrastucture.elasticSearch;
 
+import api.domain.infrastructure.ConfigRepository;
 import io.searchbox.client.JestClient;
 import io.searchbox.client.JestClientFactory;
 import io.searchbox.client.JestResult;
@@ -11,17 +12,21 @@ import javax.inject.Singleton;
 
 public class ElasticSearchClient implements ElasticSearchClientInterface {
 
-    private static final String HOST_PRO = "http://apache-proxy:5000";
-    private static final String HOST = "http://0.0.0.0:17560";
-
+    private static final String HOST_KEY = "elastic_host";
     private String index;
     private String type;
 
     private JestClient client;
 
     @Inject
+    private ConfigRepository configRepository;
+
+    @Inject
     @Singleton
-    public ElasticSearchClient() {
+    public ElasticSearchClient(
+            ConfigRepository configRepository
+    ) {
+        this.configRepository = configRepository;
         startConnection();
     }
 
@@ -32,7 +37,7 @@ public class ElasticSearchClient implements ElasticSearchClientInterface {
                 synchronized (this) {
                     JestClientFactory factory = new JestClientFactory();
                     factory.setHttpClientConfig(new HttpClientConfig
-                            .Builder(HOST)
+                            .Builder(getHost())
                             .defaultMaxTotalConnectionPerRoute(5)
                             .maxTotalConnection(30)
                             .multiThreaded(true)
@@ -44,6 +49,10 @@ public class ElasticSearchClient implements ElasticSearchClientInterface {
         } catch (Exception exception) {
             exception.printStackTrace();
         }
+    }
+
+    private String getHost() {
+        return this.configRepository.get(HOST_KEY);
     }
 
     public ElasticSearchClientInterface prepareSearch(String index) {

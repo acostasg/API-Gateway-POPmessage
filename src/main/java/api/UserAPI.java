@@ -12,7 +12,6 @@ import api.domain.entity.User;
 import api.domain.exceptions.InvalidAppKey;
 import api.domain.exceptions.UserInUse;
 import api.domain.infrastructure.UserRepository;
-import api.domain.service.ValidationAppService;
 
 import javax.inject.Inject;
 import javax.ws.rs.*;
@@ -36,7 +35,7 @@ public class UserAPI extends AbstractAPI {
             @QueryParam("password") String password
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         CommandLogin userCase = new CommandLogin(
                 this.userRepository,
@@ -65,7 +64,7 @@ public class UserAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 
@@ -100,7 +99,7 @@ public class UserAPI extends AbstractAPI {
             @FormParam("privacyPolicy") Boolean privacyPolicy
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         CommandRegisterUser userCase = new CommandRegisterUser(
                 this.userRepository
@@ -137,7 +136,7 @@ public class UserAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 
@@ -158,7 +157,7 @@ public class UserAPI extends AbstractAPI {
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
-        ValidationAppService.validateKeyApp(authorization);
+        this.validationAppService.validationKey(authorization);
 
         User user = this.getUserByToken(token);
 
