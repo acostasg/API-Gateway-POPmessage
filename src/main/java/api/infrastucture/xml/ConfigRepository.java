@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class ConfigRepository implements api.domain.infrastructure.ConfigRepository {
 
-    private static final String PATH_FILE_CONFIG = "src/main/java/api/config/api.xml";
+    private static final String PATH_FILE_CONFIG = "config/api.xml";
     private Document parser;
 
     @Singleton

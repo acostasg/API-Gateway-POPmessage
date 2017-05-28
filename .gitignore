@@ -1,4 +1,4 @@
 .idea
 /classes/
 /target/
-src/main/java/api/config/*
+config/api.xml
