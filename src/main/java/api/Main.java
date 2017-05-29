@@ -17,22 +17,21 @@ import java.net.URI;
 public class Main extends ResourceConfig {
 
     static final String BASE_URI = "http://0.0.0.0:8080/";
+    private static final String CONFIG_LOG4J2_PATH = "/config/log4j2.properties";
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
-     *
-     * @return Grizzly HTTP server.
      */
-    static HttpServer startServer() {
+    private static void startServer() {
         BasicConfigurator.configure();
         final ResourceConfig rc = new ResourceConfig().packages("api");
         rc.register(new POPMessageBinder());
-        return GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
+        GrizzlyHttpServerFactory.createHttpServer(URI.create(BASE_URI), rc);
     }
 
     /**
      * Starts Grizzly HTTP server exposing JAX-RS resources defined in this application.
-     * With InMemoryRepositories
+     * For testing propose with InMemoryRepositories
      *
      * @return Grizzly HTTP server.
      */
@@ -49,12 +48,9 @@ public class Main extends ResourceConfig {
      * @throws IOException
      */
     public static void main(String[] args) throws IOException {
-        final String dir = System.getProperty("user.dir");
-        PropertyConfigurator.configure(dir + "/log4j2.properties");
-
+        PropertyConfigurator.configure(CONFIG_LOG4J2_PATH);
         startServer();
-
-        System.out.println(String.format("Jersey app started with WADL available at "
+        System.out.println(String.format("POPmessage app server started with WADL available at "
                 + "%sapplication.wadl", BASE_URI));
     }
 }

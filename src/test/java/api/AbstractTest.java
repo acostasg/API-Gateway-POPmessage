@@ -12,9 +12,8 @@ import javax.ws.rs.client.WebTarget;
 
 public abstract class AbstractTest extends ResourceConfig {
 
-    static final String APP_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
-
-    static final String TOKEN = "sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj";
+    static final String APP_KEY_TESTING = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+    static final String TOKEN_TESTING = "sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj";
 
     private HttpServer server;
     WebTarget target;
@@ -26,13 +25,7 @@ public abstract class AbstractTest extends ResourceConfig {
         this.server = Main.startServerTest();
         // create the client
         Client c = ClientBuilder.newClient();
-
-        // uncomment the following line if you want to enable
-        // support for JSON in the client (you also have to uncomment
-        // dependency on jersey-media-json module in pom.xml and Main.startServer())
-        // --
-        // c.configuration().enable(new org.glassfish.jersey.media.json.JsonJaxbFeature());
-
+        //set target for testing
         this.target = c.target(Main.BASE_URI);
     }
 

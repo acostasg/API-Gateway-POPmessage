@@ -19,9 +19,9 @@ public class MessageTest extends AbstractTest {
         String responseMsg = this.target.path("message/get")
                 .queryParam("lat", "12.123123")
                 .queryParam("lon", "34.234234")
-                .queryParam("Token", TOKEN)
+                .queryParam("Token", TOKEN_TESTING)
                 .request()
-                .header("Authorization", APP_KEY)
+                .header("Authorization", APP_KEY_TESTING)
                 .get(String.class);
 
         JSONParser parser = new JSONParser();
@@ -41,9 +41,9 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/create")
-                .queryParam("Token", TOKEN)
+                .queryParam("Token", TOKEN_TESTING)
                 .request()
-                .header("Authorization", APP_KEY)
+                .header("Authorization", APP_KEY_TESTING)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -55,9 +55,9 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/vote/like/create")
-                .queryParam("Token", TOKEN)
+                .queryParam("Token", TOKEN_TESTING)
                 .request()
-                .header("Authorization", APP_KEY)
+                .header("Authorization", APP_KEY_TESTING)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -69,9 +69,9 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/vote/dislike/create")
-                .queryParam("Token", TOKEN)
+                .queryParam("Token", TOKEN_TESTING)
                 .request()
-                .header("Authorization", APP_KEY)
+                .header("Authorization", APP_KEY_TESTING)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -84,9 +84,9 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/update")
-                .queryParam("Token", TOKEN)
+                .queryParam("Token", TOKEN_TESTING)
                 .request()
-                .header("Authorization", APP_KEY)
+                .header("Authorization", APP_KEY_TESTING)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
@@ -98,9 +98,9 @@ public class MessageTest extends AbstractTest {
         Entity<Form> entity = Entity.entity(input, MediaType.APPLICATION_FORM_URLENCODED);
 
         Response response = this.target.path("message/delete")
-                .queryParam("Token", TOKEN)
+                .queryParam("Token", TOKEN_TESTING)
                 .request()
-                .header("Authorization", APP_KEY)
+                .header("Authorization", APP_KEY_TESTING)
                 .post(entity);
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }

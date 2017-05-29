@@ -1,0 +1,22 @@
+Manifest-Version: 1.0
+Class-Path: javax.ws.rs-api-2.0.1.jar slf4j-log4j12-1.6.1.jar grizzly-
+ framework-2.3.28.jar ehcache-3.3.1.jar kryo-4.0.0.jar jersey-common-2
+ .25.1.jar commons-lang3-3.4.jar grizzly-http-2.3.28.jar jackson-annot
+ ations-2.8.0.jar hk2-locator-2.5.0-b32.jar grizzly-http-server-2.3.28
+ .jar jersey-media-moxy-2.25.1.jar hk2-utils-2.5.0-b32.jar javax.json-
+ 1.0.4.jar asm-5.0.4.jar objenesis-2.2.jar jest-common-2.4.0.jar minlo
+ g-1.3.0.jar bcprov-jdk15on-1.55.jar commons-codec-1.10.jar javax.inje
+ ct-2.5.0-b32.jar commons-logging-1.2.jar jackson-core-2.8.4.jar jacks
+ on-databind-2.8.4.jar reflectasm-1.11.3.jar json-simple-1.1.1.jar org
+ .eclipse.persistence.moxy-2.6.0.jar jersey-container-grizzly2-http-2.
+ 25.1.jar slf4j-api-1.7.21.jar hk2-api-2.5.0-b32.jar jersey-guava-2.25
+ .1.jar jersey-client-2.25.1.jar osgi-resource-locator-1.0.1.jar httpc
+ ore-4.4.4.jar httpasyncclient-4.1.1.jar aopalliance-repackaged-2.5.0-
+ b32.jar gson-2.6.2.jar jest-2.4.0.jar org.eclipse.persistence.asm-2.6
+ .0.jar org.eclipse.persistence.core-2.6.0.jar guava-19.0.jar log4j-1.
+ 2.16.jar httpcore-nio-4.4.4.jar javassist-3.20.0-GA.jar jersey-entity
+ -filtering-2.25.1.jar javax.annotation-api-1.2.jar java-jwt-3.1.0.jar
+  validation-api-1.1.0.Final.jar jersey-server-2.25.1.jar httpclient-4
+ .5.2.jar jersey-media-jaxb-2.25.1.jar
+Main-Class: api.Main
+
