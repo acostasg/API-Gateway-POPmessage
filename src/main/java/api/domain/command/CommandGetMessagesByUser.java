@@ -18,7 +18,10 @@ public class CommandGetMessagesByUser implements Command<List<Message>, GetMessa
 
     @Override
     public List<Message> execute(GetMessagesByUserRequest request) {
-        return this.messageRepository.getMessagesByUser(request.user());
+        return this.messageRepository.getMessagesByUser(
+                request.user(),
+                request.last()
+        );
     }
 
 }

@@ -18,7 +18,10 @@ public class CommandGetMessagesByLocation implements Command<List<Message>, GetM
 
     @Override
     public List<Message> execute(GetMessagesByLocationRequest request) {
-        return this.messageRepository.getMessagesByLocation(request.location());
+        return this.messageRepository.getMessagesByLocation(
+                request.location(),
+                request.last()
+        );
     }
 
 }

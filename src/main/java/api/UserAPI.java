@@ -133,6 +133,7 @@ public class UserAPI extends AbstractAPI {
     @Produces(MediaType.APPLICATION_JSON)
     public Response getMessages(
             @HeaderParam(value = "Authorization") String authorization,
+            @QueryParam("last") int last,
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
@@ -143,7 +144,7 @@ public class UserAPI extends AbstractAPI {
         if (null == user)
             return Response.status(Response.Status.BAD_REQUEST).build();
 
-        List<Message> messageList = this.getMessagesByUser(user);
+        List<Message> messageList = this.getMessagesByUser(user, last);
 
         return Response.ok(messageList.toString(), MediaType.APPLICATION_JSON).build();
     }

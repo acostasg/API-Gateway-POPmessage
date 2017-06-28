@@ -32,6 +32,7 @@ public class MessageAPI extends AbstractAPI {
             @HeaderParam(value = "Authorization") String authorization,
             @QueryParam("lat") String lat,
             @QueryParam("lon") String lon,
+            @QueryParam("last") int last,
             @QueryParam("Token") String token
     ) throws InvalidAppKey {
 
@@ -49,7 +50,8 @@ public class MessageAPI extends AbstractAPI {
         List<Message> messages = useCase.execute(
                 new GetMessagesByLocationRequest(
                         lat,
-                        lon
+                        lon,
+                        last
                 )
         );
 

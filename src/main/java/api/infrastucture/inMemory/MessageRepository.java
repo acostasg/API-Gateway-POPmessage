@@ -19,12 +19,12 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
     }
 
     @Override
-    public List<Message> getMessagesByUser(User user) {
+    public List<Message> getMessagesByUser(User user, int last) {
         return this.getMessagesByUser(user, 10);
     }
 
     @Override
-    public List<Message> getMessagesByUser(User user, int limit) {
+    public List<Message> getMessagesByUser(User user, int last, int limit) {
         List<Message> messages = new ArrayList<Message>();
         for (Integer i = 0; i < limit; i++) {
             messages.add(this.getMessageDummy());
@@ -33,12 +33,12 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
     }
 
     @Override
-    public List<Message> getMessagesByLocation(Location location) {
-        return this.getMessagesByLocation(location, 10);
+    public List<Message> getMessagesByLocation(Location location, int last) {
+        return this.getMessagesByLocation(location, last, 10);
     }
 
     @Override
-    public List<Message> getMessagesByLocation(Location location, int limit) {
+    public List<Message> getMessagesByLocation(Location location, int last, int limit) {
         List<Message> messages = new ArrayList<Message>();
         for (Integer i = 0; i < limit; i++) {
             messages.add(this.getMessageDummy());

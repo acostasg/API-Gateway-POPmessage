@@ -7,13 +7,13 @@ import java.util.List;
 
 public interface MessageRepository {
 
-    List<Message> getMessagesByUser(User user);
+    List<Message> getMessagesByUser(User user, int last);
 
-    List<Message> getMessagesByUser(User user, int limit);
+    List<Message> getMessagesByUser(User user,  int last, int limit);
 
-    List<Message> getMessagesByLocation(Location location);
+    List<Message> getMessagesByLocation(Location location, int last);
 
-    List<Message> getMessagesByLocation(Location location, int limit);
+    List<Message> getMessagesByLocation(Location location, int last, int limit);
 
     Message getMessage(Id messageId);
 

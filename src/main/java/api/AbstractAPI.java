@@ -66,14 +66,15 @@ abstract class AbstractAPI {
         );
     }
 
-    List<Message> getMessagesByUser(User user) {
+    List<Message> getMessagesByUser(User user, int last) {
         CommandGetMessagesByUser userCaseGetMessagesByUser = new CommandGetMessagesByUser(
                 this.messageRepository
         );
 
         return userCaseGetMessagesByUser.execute(
                 new GetMessagesByUserRequest(
-                        user
+                        user,
+                        last
                 )
         );
     }

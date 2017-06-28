@@ -22,16 +22,17 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
     private static final String index = "message_index";
     private static final String type = "message";
+    public static final int LIMIT = 10;
     private final MessageMapper messageMapper = new MessageMapper();
 
     @Override
-    public List<Message> getMessagesByUser(User user) {
-        return this.getMessagesByUser(user, 10);
+    public List<Message> getMessagesByUser(User user, int last) {
+        return this.getMessagesByUser(user, last, LIMIT);
     }
 
     @Override
-    public List<Message> getMessagesByUser(User user, int limit) {
-        String queryDSL = MessageByUserDSL.get(user, 0, limit);
+    public List<Message> getMessagesByUser(User user, int last, int limit) {
+        String queryDSL = MessageByUserDSL.get(user, last, limit);
         return this.getMessagesByQueryDSl(queryDSL);
     }
 
@@ -60,13 +61,14 @@ public class MessageRepository extends AbstractElasticSearchRepository implement
 
 
     @Override
-    public List<Message> getMessagesByLocation(Location location) {
-        return this.getMessagesByLocation(location, 10);
+    public List<Message> getMessagesByLocation(Location location, int last) {
+        String queryDSL = MessageByLocationUserDSL.get(location, last, LIMIT);
+        return this.getMessagesByQueryDSl(queryDSL);
     }
 
     @Override
-    public List<Message> getMessagesByLocation(Location location, int limit) {
-        String queryDSL = MessageByLocationUserDSL.get(location, 0, limit);
+    public List<Message> getMessagesByLocation(Location location, int last, int limit) {
+        String queryDSL = MessageByLocationUserDSL.get(location, last, limit);
         return this.getMessagesByQueryDSl(queryDSL);
     }
 
