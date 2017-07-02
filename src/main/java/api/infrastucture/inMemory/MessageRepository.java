@@ -20,7 +20,7 @@ public class MessageRepository implements api.domain.infrastructure.MessageRepos
 
     @Override
     public List<Message> getMessagesByUser(User user, int last) {
-        return this.getMessagesByUser(user, 10);
+        return this.getMessagesByUser(user, last, 10);
     }
 
     @Override

@@ -20,9 +20,9 @@ import java.util.UUID;
 
 public class MessageRepository extends AbstractElasticSearchRepository implements api.domain.infrastructure.MessageRepository {
 
+    public static final int LIMIT = 10;
     private static final String index = "message_index";
     private static final String type = "message";
-    public static final int LIMIT = 10;
     private final MessageMapper messageMapper = new MessageMapper();
 
     @Override

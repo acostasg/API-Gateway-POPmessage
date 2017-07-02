@@ -20,5 +20,7 @@ public class GetMessagesByLocationRequest implements Request {
         return location;
     }
 
-    public int last() { return this.last; }
+    public int last() {
+        return this.last;
+    }
 }

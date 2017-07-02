@@ -19,5 +19,7 @@ public class GetMessagesByUserRequest implements Request {
         return user;
     }
 
-    public int last() { return last; }
+    public int last() {
+        return last;
+    }
 }

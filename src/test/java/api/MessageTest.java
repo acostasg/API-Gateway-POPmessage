@@ -33,6 +33,25 @@ public class MessageTest extends AbstractTest {
     }
 
     @Test
+    public void test_get_with_pagination() throws ParseException {
+        String responseMsg = this.target.path("message/get")
+                .queryParam("lat", "12.123123")
+                .queryParam("lon", "34.234234")
+                .queryParam("last", "10")
+                .queryParam("Token", TOKEN_TESTING)
+                .request()
+                .header("Authorization", APP_KEY_TESTING)
+                .get(String.class);
+
+        JSONParser parser = new JSONParser();
+
+        Object obj = parser.parse(responseMsg);
+        JSONArray jsonArray = (JSONArray) obj;
+
+        assertEquals(10, jsonArray.size());
+    }
+
+    @Test
     public void test_message_create() {
         Form input = new Form();
         input.param("text", "testName");

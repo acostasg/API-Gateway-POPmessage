@@ -9,7 +9,7 @@ public interface MessageRepository {
 
     List<Message> getMessagesByUser(User user, int last);
 
-    List<Message> getMessagesByUser(User user,  int last, int limit);
+    List<Message> getMessagesByUser(User user, int last, int limit);
 
     List<Message> getMessagesByLocation(Location location, int last);
 

@@ -203,7 +203,7 @@ public class MessageAPI extends AbstractAPI {
             return Response.status(Response.Status.UNAUTHORIZED).build();
 
 
-        return Response.ok(user.toString(), MediaType.APPLICATION_JSON).build();
+        return Response.ok(message.toString(), MediaType.APPLICATION_JSON).build();
     }
 
 }

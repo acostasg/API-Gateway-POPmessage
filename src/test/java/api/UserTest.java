@@ -68,4 +68,22 @@ public class UserTest extends AbstractTest {
 
         assertEquals(10, jsonArray.size());
     }
+
+    @Test
+    public void test_message_get_with_pagination() throws ParseException {
+
+        String responseMsg = this.target.path("user/message/get")
+                .queryParam("Token", TOKEN_TESTING)
+                .queryParam("last", 10)
+                .request()
+                .header("Authorization", APP_KEY_TESTING)
+                .get(String.class);
+
+        JSONParser parser = new JSONParser();
+
+        Object obj = parser.parse(responseMsg);
+        JSONArray jsonArray = (JSONArray) obj;
+
+        assertEquals(10, jsonArray.size());
+    }
 }

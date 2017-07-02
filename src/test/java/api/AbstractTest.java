@@ -14,10 +14,8 @@ public abstract class AbstractTest extends ResourceConfig {
 
     static final String APP_KEY_TESTING = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
     static final String TOKEN_TESTING = "sakjfh97325437hskfsdfd_sdkjfsjf1283763339564921734sdfbdsj";
-
-    private HttpServer server;
     WebTarget target;
-
+    private HttpServer server;
 
     @Before
     public void setUp() throws Exception {
