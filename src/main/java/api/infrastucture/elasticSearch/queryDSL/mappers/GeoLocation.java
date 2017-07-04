@@ -27,6 +27,6 @@ class GeoLocation {
         raw = raw.replaceAll(Pattern.quote("}"), "");
         String[] attr = raw.split(",");
 
-        return new Location(attr[0], attr[1]);
+        return new Location(attr[1], attr[0]);
     }
 }
